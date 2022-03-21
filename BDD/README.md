@@ -24,12 +24,14 @@ sudo systemctl is-active postgresql
 sudo systemctl is-enabled postgresql
 sudo systemctl status postgresql
 ```
+
 ![image](images/InstallPostGre.PNG)
 
 Enfin, on doit s'assurer que le serveur postgre est prêt à accepter des connections :
 ```
 sudo pg_isready
 ```
+
 ![image](images/InstallPostGre2.PNG)
 
 Ensuite, il faut créer un utilisateur et une base de donnée :
@@ -53,6 +55,7 @@ alegoria=# \q
 ```
 
 Après cela, il faut ouvrir le client PgAdmin et établir une connexion au serveur à partir de l'icone "Add new server". Ceci ouvre une fenêtre avec plusieurs onglets. Dans l'onglet général, donné le nom souhaité au serveur (ex: localhost). Ensuite, dans l'onglet Connection, il faut se connecter au serveur à partir de l'utilisateur créé plus haut :
+
 ![image](images/InstallBDD.PNG)
 
 Il faut ensuite s'assurer que python est bien installé et installer les librairies nécessaires :
