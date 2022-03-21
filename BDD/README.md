@@ -1,15 +1,15 @@
-# Guide d'installation et d'entretien de la BDD #
+# Database Installation and Maintenance Guide #
 
 ## Architecture ##
 
-## Installation ##
+## Install ##
 
-Dans un premier temps, il faut installer postgresql:
+In the following section we will explain how to install the database. First of all, the PostgreSQL library must be installed with the following command :
 ```
 sudo apt install postgresql
 ```
 
-Dans un second temps, il faut installer le client pgAdmin :
+Next, you need to install the pgAdmin client, an ergonomic interface for handling PostgreSQL databases :
 ```
 sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
 
@@ -18,7 +18,7 @@ sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_
 sudo apt install pgadmin4-dekstop
 ```
 
-Il faut ensuite s'assurer que le service est actif et en marche :
+The next step is to ensure that the service is operational, active and running:
 ```
 sudo systemctl is-active postgresql
 sudo systemctl is-enabled postgresql
@@ -27,16 +27,15 @@ sudo systemctl status postgresql
 
 ![image](images/InstallPostGre.PNG)
 
-Enfin, on doit s'assurer que le serveur postgre est prêt à accepter des connections :
+Finally, we must ensure that the postgresql server is ready to accept connections :
 ```
 sudo pg_isready
 ```
 
 ![image](images/InstallPostGre2.PNG)
 
-Ensuite, il faut créer un utilisateur et une base de donnée :
+After the previous steps, we have successfully installed PostgreSQL and its client PgAdmin. However, no database is instantiated and therefore no connection to a server can be established. We will therefore create the database and the server.
 
-**A noter que le user et le password doivent être postgres par défaut (choix du commanditaire dans ses fichiers). Le nom de la base doit être alegoria.**
 ```
 sudo -u postgres psql
 postgres=# CREATE DATABASE alegoria;
@@ -44,7 +43,7 @@ postgres=# GRANT ALL PRIVILEGES ON DATABASE alegoria to postgres;
 postgres=# \q
 ```
 
-Il faut également installer l'extension postgis à notre base de données. Pour cela :
+Since we are handling spatial data, we also need to install the postgis extension to our database :
 ```
 sudo apt install postgis postgresql-12-postgis-3
 sudo -u postgres psql
@@ -54,11 +53,11 @@ alegoria=# CREATE EXTENSION postgis_topology;
 alegoria=# \q
 ```
 
-Après cela, il faut ouvrir le client PgAdmin et établir une connexion au serveur à partir de l'icone "Add new server". Ceci ouvre une fenêtre avec plusieurs onglets. Dans l'onglet général, donné le nom souhaité au serveur (ex: localhost). Ensuite, dans l'onglet Connection, il faut se connecter au serveur à partir de l'utilisateur créé plus haut :
+After that, you need to open the PgAdmin client and establish a connection to the server from the "Add new server" icon. This opens a window with several tabs. In the General tab, give the desired name to the server (ex: localhost). Then, in the Connection tab, connect to the server from the user created above :
 
 ![image](images/InstallBDD.PNG)
 
-Il faut ensuite s'assurer que python est bien installé et installer les librairies nécessaires :
+Now that everything is up and running, we need to fill the database. We must ensure that python is installed with the following packages :
 ```
 python3 --version
 sudo apt-get install python3-pip 
@@ -66,14 +65,14 @@ pip install psycopg2-binary
 pip install pyquaternion
 ```
 
-Puis cloner le dépôt du serveur:
+Before finishing, you must clone the repository containing the database creation scripts :
 ```
 git clone https://github.com/mbredif/alegoria.git
 git cd alegoria
 git checkout TSI/tests
 ```
 
-Après cela, ouvrir un terminal dans le dossier IGNF et exécuter les lignes suivantes :
+Finally, we can complete our database with the following commands :
 ```
 python3 micmac2pg.py postgres postgres alegoria localhost 5432
 python3 ta2pg.py postgres postgres alegoria localhost 5432
@@ -81,4 +80,4 @@ bash "Create_views.sh"
 bash "Resolutions_scannage.sh"
 ```
 
-## Entretien ##
+## Maintenance ##
