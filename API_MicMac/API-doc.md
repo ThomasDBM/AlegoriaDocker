@@ -12,7 +12,11 @@ Mandatory unnamed args :
 * string :: {Name File for GCP} (3)
 * string :: {Name File for Image Measures} (4)
 
-**return ????**
+Create 3 files :
+- Ori-Aspro/AutoCal_Foc-50000_Cam-{imgname}.xml
+- Ori-Aspro/Densite_AutoCal_Foc-50000_Cam-{imgname}.tif
+- Ori-Aspro/Orientation-{imgname}.jpg.xml
+
 
 Example :
 ```
