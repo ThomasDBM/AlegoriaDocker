@@ -32,7 +32,7 @@ Vous devez ajouter les packages administrateurs pour tomcat. Pour cela vous deve
 ```
 sudo nano /etc/tomcat9/tomcat-users.xml
 ```
-Une fois le fichier ouvert rajoutez les lignes suivantes (walla tu les mets où tu veux frère) :
+Une fois le fichier ouvert rajoutez les lignes suivantes :
 ```
 <role rolename="admin-gui"/>
 <role rolename="manager-gui"/>
@@ -142,5 +142,6 @@ CREATE VIEW <nom_vue> [<nom_des_colonnes>]
 AS <requête> [WITH CHECK OPTION];
 ```
 
+Vous pouvez créer la vue de 2 façons
 
 
