@@ -5,6 +5,8 @@ Put in this directory the needed files to run tha alegoria App :
 - itowns repository : https://github.com/itowns/itowns
 - photogrammetric-camera : https://github.com/ThomasDBM/photogrammetric-camera
 
+- Le code source de l'API pour MICMAC est disponible [ici](https://github.com/ThomasDBM/MicMac-API)
+
 ## Set-up
 Pour itowns 2 possibilités :
 1) Après avoir cloner le depot itowns, dans la dernière release (https://github.com/iTowns/itowns/releases/tag/v2.37.0) télécharger le bundle au format zip. Le deziper puis le renommer "dist". Copier coller le dossier dans le dossier itowns.
