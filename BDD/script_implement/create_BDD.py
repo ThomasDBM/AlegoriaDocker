@@ -16,24 +16,25 @@ debug = False
 create_masks_table = """
 CREATE TABLE IF NOT EXISTS masks(
     Id_masks SERIAL PRIMARY KEY,
-    url TEXT NOT NULL,
+    url VARCHAR NOT NULL,
     UNIQUE(url)
 );
 """
 
 create_sources_table = """
-CREATE TABLE sources(
-    id_sources COUNTER,
-    credit TEXT NOT NULL,
-    home TEXT,
-    url TEXT NOT NULL,
-    viewer TEXT,
-    thumbnail TEXT,
-    lowres TEXT,
-    highres TEXT,
-    iip TEXT,
-    footprint TEXT NOT NULL,
-    PRIMARY KEY(id_sources)
+CREATE EXTENSION postgis;
+
+CREATE TABLE IF NOT EXISTS sources(
+    id_sources SERIAL PRIMARY KEY,
+    credit VARCHAR NOT NULL,
+    home VARCHAR,
+    url VARCHAR NOT NULL,
+    viewer VARCHAR,
+    thumbnail VARCHAR,
+    lowres VARCHAR,
+    highres VARCHAR,
+    iip VARCHAR,
+    footprint geometry(MultiPolygon,2154) NOT NULL
 );
 """
 
@@ -131,32 +132,31 @@ CREATE TABLE points_appuis(
 """
 
 try:
+    print(filename)
+    connection = psycopg2.connect(
+    	user = user,
+        password = password,
+        host = host,
+        port = port,
+        database = database
+    )
+    cursor = connection.cursor()
 
-	print(filename)
-	connection = psycopg2.connect(
-		user = user,
-		password = password,
-		host = host,
-		port = port,
-		database = database
-	)
-	cursor = connection.cursor()
+    cursor.execute(create_masks_table)
+    cursor.execute(create_sources_table)
+    connection.commit()
 
-	cursor.execute(create_masks_table)
-	connection.commit()
+    for f in sorted(glob.glob(filename)):
+    	print(f,end='', flush=True)
+    	try:
+    		mydoc = ET.parse(f).getroot()
+    	except ET.ParseError as err:
+    		print(err, flush=True)
+    		continue
 
-	for f in sorted(glob.glob(filename)):
-		print(f,end='', flush=True)
-		try:
-			mydoc = ET.parse(f).getroot()
-		except ET.ParseError as err:
-			print(err, flush=True)
-			continue
-
-		chantier_id = insertChantier(mydoc, cursor)
-		connection.commit()
+    	chantier_id = insertChantier(mydoc, cursor)
+    	connection.commit()
 	
-
 except (Exception, psycopg2.Error) as error :
 	print('ERROR[' + filename +'] : '+ str(error))
 finally:
