@@ -61,11 +61,11 @@ CREATE TABLE IF NOT EXISTS externe(
 );
 """
 
+# creation de la table transfo2D
 create_transfo2D_table = """
-CREATE TABLE transfo2D(
-    id_transfo2D COUNTER,
-    image_matrix ARRAY,
-    PRIMARY KEY(id_transfo2D)
+CREATE TABLE IF NOT EXISTS transfo2D(
+    id_transfo2D SERIAL PRIMARY KEY,
+    image_matrix integer ARRAY
 );
 """
 
@@ -148,6 +148,7 @@ try:
     cursor.execute(create_sources_table)
     cursor.execute(create_interne_table)
     cursor.execute(create_externe_table)
+    cursor.execute(create_transfo2D_table)
     connection.commit()
 
     for f in sorted(glob.glob(filename)):
