@@ -2,13 +2,13 @@
 
 ## Installation Docker
 
-Récuperer l'image distante thinkwhere/geoserver:
+depuis la racine du repository récuperer l'image distante thinkwhere/geoserver:
 ```
 docker pull thinkwhere/geoserver
 ```
 lancer un conteneur avec :
 ```
-docker run     --name=geoserver_8085     -p 8085:8080     --rm     -v $HOME/geoserver_data:/opt/geoserver/data_dir     -e "GEOSERVER_LOG_LOCATION=/opt/geoserver/data_dir/logs/geoserver_8085.log"     -t thinkwhere/geoserver
+docker run     --name=geoserver_8085     -p 8085:8080     --rm     -v Geoserver/geoserver_data:/opt/geoserver/data_dir     -e "GEOSERVER_LOG_LOCATION=/opt/geoserver/data_dir/logs/geoserver_8085.log"     -t thinkwhere/geoserver
 ```
 se connecter sur 
 ```
