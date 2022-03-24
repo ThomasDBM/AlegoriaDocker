@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS sources(
 );
 """
 
-# creation de la table 
+# creation de la table interne
 create_interne_table = """
 CREATE TABLE IF NOT EXISTS interne(
     id_interne SERIAL PRIMARY KEY,
@@ -50,19 +50,18 @@ CREATE TABLE IF NOT EXISTS interne(
     distorsion integer ARRAY
 );
 """
-# varchar sense etre un array
 
+# creation de la table externe
 create_externe_table = """
-CREATE TABLE externe(
-    id_externe COUNTER,
-    point TEXT NOT NULL,
-    quaternion TEXT NOT NULL,
-    SRID INT NOT NULL,
-    PRIMARY KEY(id_externe)
+CREATE TABLE IF NOT EXISTS externe(
+    id_externe SERIAL PRIMARY KEY,
+    point geometry(PointZ, 0) NOT NULL,
+    quaternion geometry(PointZ, 0) NOT NULL,
+    SRID INT NOT NULL
 );
 """
 
-create_trasfo2D_table = """
+create_transfo2D_table = """
 CREATE TABLE transfo2D(
     id_transfo2D COUNTER,
     image_matrix ARRAY,
@@ -148,6 +147,7 @@ try:
     cursor.execute(create_masks_table)
     cursor.execute(create_sources_table)
     cursor.execute(create_interne_table)
+    cursor.execute(create_externe_table)
     connection.commit()
 
     for f in sorted(glob.glob(filename)):
