@@ -1,4 +1,21 @@
-# Installation Geoserver et BDD
+# Installation Geoserver 
+
+## Installation Docker
+
+Récuperer l'image distante thinkwhere/geoserver:
+```
+docker pull thinkwhere/geoserver
+```
+lancer un conteneur avec :
+```
+docker run     --name=geoserver_8085     -p 8085:8080     --rm     -v $HOME/geoserver_data:/opt/geoserver/data_dir     -e "GEOSERVER_LOG_LOCATION=/opt/geoserver/data_dir/logs/geoserver_8085.log"     -t thinkwhere/geoserver
+```
+se connecter sur 
+```
+0.0.0.0:8085/geoserver
+```
+
+## Installation local Geoserver et BDD
 
 
 ######        ######
