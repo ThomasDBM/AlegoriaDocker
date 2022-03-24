@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS transfo3D(
 
 # creation de la table georefs
 create_georefs_table = """
-CREATE TABLE georefs(
+CREATE TABLE IF NOT EXISTS georefs(
     id_georefs SERIAL PRIMARY KEY,
     user_georef VARCHAR NOT NULL,
     date timestamp NOT NULL,
@@ -97,23 +97,22 @@ CREATE TABLE georefs(
 
 create_images_table = """
 CREATE TABLE IF NOT EXISTS images(
-    id COUNTER,
-    t0 DATE NOT NULL,
-    t1 DATE NOT NULL,
-    url TEXT NOT NULL,
-    image TEXT NOT NULL,
-    origine TEXT NOT NULL,
+    id SERIAL PRIMARY KEY,
+    t0 timestamp NOT NULL,
+    t1 timestamp NOT NULL,
+    url VARCHAR NOT NULL,
+    image VARCHAR NOT NULL,
+    origine VARCHAR NOT NULL,
     qualite BIGINT,
-    resolution_min DOUBLE,
-    resolution_moy DOUBLE,
-    resolution_max DOUBLE,
-    footprint TEXT NOT NULL,
-    size_image TEXT NOT NULL,
-    near_frustum_camera TEXT NOT NULL,
+    resolution_min FLOAT,
+    resolution_moy FLOAT,
+    resolution_max FLOAT,
+    footprint geometry(Polygon, 0) NOT NULL,
+    size_image geometry(Point, 0) NOT NULL,
+    near_frustum_camera geometry(PointZ, 0) NOT NULL,
     id_sources INT NOT NULL,
     id_georefs INT,
     Id_masks INT,
-    PRIMARY KEY(id),
     UNIQUE(url),
     UNIQUE(image),
     FOREIGN KEY(id_sources) REFERENCES sources(id_sources),
@@ -151,6 +150,7 @@ try:
     cursor.execute(create_transfo2D_table)
     cursor.execute(create_transfo3D_table)
     cursor.execute(create_georefs_table)
+    cursor.execute(create_images_table)
     connection.commit()
 
     for f in sorted(glob.glob(filename)):
