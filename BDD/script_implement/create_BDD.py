@@ -39,7 +39,7 @@ debug = False
 # requete de creation de la table masks
 create_masks_table = """
 CREATE TABLE IF NOT EXISTS masks(
-    Id_masks SERIAL PRIMARY KEY,
+    id_masks SERIAL PRIMARY KEY,
     url VARCHAR NOT NULL,
     UNIQUE(url)
 );
@@ -136,18 +136,18 @@ CREATE TABLE IF NOT EXISTS images(
     near_frustum_camera geometry(PointZ, 0) NOT NULL,
     id_sources INT NOT NULL,
     id_georefs INT,
-    Id_masks INT,
+    id_masks INT,
     UNIQUE(url),
     UNIQUE(image),
     FOREIGN KEY(id_sources) REFERENCES sources(id_sources),
     FOREIGN KEY(id_georefs) REFERENCES georefs(id_georefs),
-    FOREIGN KEY(Id_masks) REFERENCES masks(Id_masks)
+    FOREIGN KEY(id_masks) REFERENCES masks(id_masks)
 );
 """
 
 # requete de creation de la table point_appuis
 create_points_appuis_table = """
-CREATE TABLE points_appuis(
+CREATE TABLE IF NOT EXISTS points_appuis(
     id_points_appuis SERIAL PRIMARY KEY,
     point_2d geometry(Point, 0),
     point_3d geometry(PointZ, 0),
