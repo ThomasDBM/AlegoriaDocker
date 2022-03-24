@@ -1,8 +1,10 @@
 import sys
 import psycopg2
 from psycopg2.extras import execute_values
-import xml.etree.ElementTree as ET
-import glob
+
+# Some libraries whose not using currently
+# import xml.etree.ElementTree as ET
+# import glob
 
 """
     Parameters for database's creation in command line
@@ -159,6 +161,7 @@ CREATE TABLE IF NOT EXISTS points_appuis(
 # Database connection block
 try:
     print(filename)
+
     connection = psycopg2.connect(
     	user = user,
         password = password,
@@ -166,6 +169,7 @@ try:
         port = port,
         database = database
     )
+
     cursor = connection.cursor()
 
     # Execution of each SQL query
