@@ -4,6 +4,29 @@ from psycopg2.extras import execute_values
 import xml.etree.ElementTree as ET
 import glob
 
+"""
+    Parameters for database's creation in command line
+    ...
+
+    Attributes
+    ----------
+    user : str
+        username of the database owner
+    password : str
+        password of the database owner
+    database : str
+        name of the database
+    host : str
+        hostname of the database (generally localhost)
+    port : str
+        port of the database (generally 5432)
+    filename : str
+        name of the file to import    
+
+    Methods
+    -------
+    Creation of all the table in the database
+    """
 
 user     = sys.argv[1] if len(sys.argv) > 1 else None
 password = sys.argv[2] if len(sys.argv) > 2 else None
@@ -13,7 +36,7 @@ port     = sys.argv[5] if len(sys.argv) > 5 else None
 filename = sys.argv[6] if len(sys.argv) > 6 else "*.xml"
 debug = False
 
-# creation de la table masks
+# requete de creation de la table masks
 create_masks_table = """
 CREATE TABLE IF NOT EXISTS masks(
     Id_masks SERIAL PRIMARY KEY,
@@ -22,7 +45,7 @@ CREATE TABLE IF NOT EXISTS masks(
 );
 """
 
-# creation de la table sources
+# requete de creation de la table sources avec ajout de l'extension postgis
 create_sources_table = """
 CREATE EXTENSION IF NOT EXISTS postgis;
 
@@ -40,7 +63,7 @@ CREATE TABLE IF NOT EXISTS sources(
 );
 """
 
-# creation de la table interne
+# requete de creation de la table interne
 create_interne_table = """
 CREATE TABLE IF NOT EXISTS interne(
     id_interne SERIAL PRIMARY KEY,
@@ -51,7 +74,7 @@ CREATE TABLE IF NOT EXISTS interne(
 );
 """
 
-# creation de la table externe
+# requete de creation de la table externe
 create_externe_table = """
 CREATE TABLE IF NOT EXISTS externe(
     id_externe SERIAL PRIMARY KEY,
@@ -61,7 +84,7 @@ CREATE TABLE IF NOT EXISTS externe(
 );
 """
 
-# creation de la table transfo2D
+# requete de creation de la table transfo2D
 create_transfo2D_table = """
 CREATE TABLE IF NOT EXISTS transfo2D(
     id_transfo2D SERIAL PRIMARY KEY,
@@ -69,7 +92,7 @@ CREATE TABLE IF NOT EXISTS transfo2D(
 );
 """
 
-# creation de la table transfo3D
+# requete de creation de la table transfo3D
 create_transfo3D_table = """
 CREATE TABLE IF NOT EXISTS transfo3D(
     id_transfo3D SERIAL PRIMARY KEY,
@@ -77,7 +100,7 @@ CREATE TABLE IF NOT EXISTS transfo3D(
 );
 """
 
-# creation de la table georefs
+# requete de creation de la table georefs
 create_georefs_table = """
 CREATE TABLE IF NOT EXISTS georefs(
     id_georefs SERIAL PRIMARY KEY,
@@ -95,6 +118,7 @@ CREATE TABLE IF NOT EXISTS georefs(
 );
 """
 
+# requete de creation de la table images
 create_images_table = """
 CREATE TABLE IF NOT EXISTS images(
     id SERIAL PRIMARY KEY,
@@ -121,6 +145,7 @@ CREATE TABLE IF NOT EXISTS images(
 );
 """
 
+# requete de creation de la table point_appuis
 create_points_appuis_table = """
 CREATE TABLE points_appuis(
     id_points_appuis SERIAL PRIMARY KEY,
@@ -131,6 +156,7 @@ CREATE TABLE points_appuis(
 );
 """
 
+# Database connection block
 try:
     print(filename)
     connection = psycopg2.connect(
@@ -142,6 +168,7 @@ try:
     )
     cursor = connection.cursor()
 
+    # Execution of each SQL query
     cursor.execute(create_masks_table)
     cursor.execute(create_sources_table)
     cursor.execute(create_interne_table)
@@ -151,8 +178,12 @@ try:
     cursor.execute(create_georefs_table)
     cursor.execute(create_images_table)
     cursor.execute(create_points_appuis_table)
+
+    # Commit all requests
     connection.commit()
 
+    """
+    # When you add a set of data
     for f in sorted(glob.glob(filename)):
     	print(f,end='', flush=True)
     	try:
@@ -160,11 +191,11 @@ try:
     	except ET.ParseError as err:
     		print(err, flush=True)
     		continue
-	
+	"""
 except (Exception, psycopg2.Error) as error :
 	print('ERROR[' + filename +'] : '+ str(error))
 finally:
-	#closing database connection.
+	# Closing database connection
 	if(connection):
 		cursor.close()
 		connection.close()
