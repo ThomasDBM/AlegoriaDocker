@@ -13,6 +13,7 @@ port     = sys.argv[5] if len(sys.argv) > 5 else None
 filename = sys.argv[6] if len(sys.argv) > 6 else "*.xml"
 debug = False
 
+# creation de la table masks
 create_masks_table = """
 CREATE TABLE IF NOT EXISTS masks(
     Id_masks SERIAL PRIMARY KEY,
@@ -21,8 +22,9 @@ CREATE TABLE IF NOT EXISTS masks(
 );
 """
 
+# creation de la table sources
 create_sources_table = """
-CREATE EXTENSION postgis;
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE IF NOT EXISTS sources(
     id_sources SERIAL PRIMARY KEY,
@@ -34,20 +36,21 @@ CREATE TABLE IF NOT EXISTS sources(
     lowres VARCHAR,
     highres VARCHAR,
     iip VARCHAR,
-    footprint geometry(MultiPolygon,2154) NOT NULL
+    footprint geometry(MultiPolygon,0) NOT NULL
 );
 """
 
+# creation de la table 
 create_interne_table = """
-CREATE TABLE interne(
-    id_interne COUNTER,
-    pp TEXT NOT NULL,
-    focal TEXT NOT NULL,
-    skew DOUBLE NOT NULL,
-    distorsion ARRAY,
-    PRIMARY KEY(id_interne)
+CREATE TABLE IF NOT EXISTS interne(
+    id_interne SERIAL PRIMARY KEY,
+    pp geometry(PointZ,0) NOT NULL,
+    focal geometry(PointZ,0) NOT NULL,
+    skew FLOAT NOT NULL,
+    distorsion integer ARRAY
 );
 """
+# varchar sense etre un array
 
 create_externe_table = """
 CREATE TABLE externe(
@@ -144,6 +147,7 @@ try:
 
     cursor.execute(create_masks_table)
     cursor.execute(create_sources_table)
+    cursor.execute(create_interne_table)
     connection.commit()
 
     for f in sorted(glob.glob(filename)):
@@ -153,9 +157,6 @@ try:
     	except ET.ParseError as err:
     		print(err, flush=True)
     		continue
-
-    	chantier_id = insertChantier(mydoc, cursor)
-    	connection.commit()
 	
 except (Exception, psycopg2.Error) as error :
 	print('ERROR[' + filename +'] : '+ str(error))
