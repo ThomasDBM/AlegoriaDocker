@@ -69,25 +69,25 @@ CREATE TABLE IF NOT EXISTS transfo2D(
 );
 """
 
+# creation de la table transfo3D
 create_transfo3D_table = """
-CREATE TABLE transfo3D(
-    id_transfo3D COUNTER,
-    image_matrix ARRAY,
-    PRIMARY KEY(id_transfo3D)
+CREATE TABLE IF NOT EXISTS transfo3D(
+    id_transfo3D SERIAL PRIMARY KEY,
+    image_matrix integer ARRAY
 );
 """
 
+# creation de la table georefs
 create_georefs_table = """
 CREATE TABLE georefs(
-    id_georefs COUNTER,
-    user_georef TEXT NOT NULL,
-    _date DATE NOT NULL,
-    georef_principal LOGICAL NOT NULL,
+    id_georefs SERIAL PRIMARY KEY,
+    user_georef VARCHAR NOT NULL,
+    date timestamp NOT NULL,
+    georef_principal BOOL NOT NULL,
     id_transfo3D INT NOT NULL,
     id_transfo2D INT NOT NULL,
     id_interne INT NOT NULL,
     id_externe INT NOT NULL,
-    PRIMARY KEY(id_georefs),
     FOREIGN KEY(id_transfo3D) REFERENCES transfo3D(id_transfo3D),
     FOREIGN KEY(id_transfo2D) REFERENCES transfo2D(id_transfo2D),
     FOREIGN KEY(id_interne) REFERENCES interne(id_interne),
@@ -149,6 +149,8 @@ try:
     cursor.execute(create_interne_table)
     cursor.execute(create_externe_table)
     cursor.execute(create_transfo2D_table)
+    cursor.execute(create_transfo3D_table)
+    cursor.execute(create_georefs_table)
     connection.commit()
 
     for f in sorted(glob.glob(filename)):
