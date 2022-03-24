@@ -35,7 +35,7 @@ password = sys.argv[2] if len(sys.argv) > 2 else None
 database = sys.argv[3] if len(sys.argv) > 3 else None
 host     = sys.argv[4] if len(sys.argv) > 4 else None
 port     = sys.argv[5] if len(sys.argv) > 5 else None
-filename = sys.argv[6] if len(sys.argv) > 6 else "*.xml"
+# filename = sys.argv[6] if len(sys.argv) > 6 else "*.xml" UNUSED CURRENTLY
 debug = False
 
 # requete de creation de la table masks
@@ -160,8 +160,10 @@ CREATE TABLE IF NOT EXISTS points_appuis(
 
 # Database connection block
 try:
-    print(filename)
 
+    # print(filename) UNUSED CURRENTLY
+
+    # Connection to the database with giving parameters
     connection = psycopg2.connect(
     	user = user,
         password = password,
@@ -170,6 +172,9 @@ try:
         database = database
     )
 
+    print("Successful connection.")
+
+    # Database pointer
     cursor = connection.cursor()
 
     # Execution of each SQL query
@@ -186,7 +191,9 @@ try:
     # Commit all requests
     connection.commit()
 
-    """
+    print("The database has been modified according to the queries made.")
+
+    """ UNUSED CURRENTLY
     # When you add a set of data
     for f in sorted(glob.glob(filename)):
     	print(f,end='', flush=True)
@@ -196,6 +203,7 @@ try:
     		print(err, flush=True)
     		continue
 	"""
+
 except (Exception, psycopg2.Error) as error :
 	print('ERROR[' + filename +'] : '+ str(error))
 finally:
