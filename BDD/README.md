@@ -65,19 +65,9 @@ pip install psycopg2-binary
 pip install pyquaternion
 ```
 
-Before finishing, you must clone the repository containing the database creation scripts :
-```
-git clone https://github.com/mbredif/alegoria.git
-git cd alegoria
-git checkout TSI/tests
-```
-
 Finally, we can complete our database with the following commands :
 ```
-python3 micmac2pg.py postgres postgres alegoria localhost 5432
-python3 ta2pg.py postgres postgres alegoria localhost 5432
-bash "Create_views.sh"
-bash "Resolutions_scannage.sh"
+python3 create_BDD.py postgres postgres alegoria localhost 5432
 ```
 
 ## Maintenance ##
