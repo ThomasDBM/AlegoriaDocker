@@ -123,11 +123,10 @@ CREATE TABLE IF NOT EXISTS images(
 
 create_points_appuis_table = """
 CREATE TABLE points_appuis(
-    Id_points_appuis COUNTER,
-    point_2d TEXT,
-    point_3d TEXT,
+    id_points_appuis SERIAL PRIMARY KEY,
+    point_2d geometry(Point, 0),
+    point_3d geometry(PointZ, 0),
     id INT NOT NULL,
-    PRIMARY KEY(Id_points_appuis),
     FOREIGN KEY(id) REFERENCES images(id)
 );
 """
@@ -151,6 +150,7 @@ try:
     cursor.execute(create_transfo3D_table)
     cursor.execute(create_georefs_table)
     cursor.execute(create_images_table)
+    cursor.execute(create_points_appuis_table)
     connection.commit()
 
     for f in sorted(glob.glob(filename)):
