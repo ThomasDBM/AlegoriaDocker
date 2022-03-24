@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS georefs(
 # requete de creation de la table images
 create_images_table = """
 CREATE TABLE IF NOT EXISTS images(
-    id SERIAL PRIMARY KEY,
+    id_images SERIAL PRIMARY KEY,
     t0 timestamp NOT NULL,
     t1 timestamp NOT NULL,
     url VARCHAR NOT NULL,
@@ -153,8 +153,8 @@ CREATE TABLE IF NOT EXISTS points_appuis(
     id_points_appuis SERIAL PRIMARY KEY,
     point_2d geometry(Point, 0),
     point_3d geometry(PointZ, 0),
-    id INT NOT NULL,
-    FOREIGN KEY(id) REFERENCES images(id)
+    id_images INT NOT NULL,
+    FOREIGN KEY(id_images) REFERENCES images(id_images)
 );
 """
 
