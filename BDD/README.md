@@ -48,7 +48,7 @@ Since we are handling spatial data, we also need to install the postgis extensio
 sudo apt install postgis postgresql-12-postgis-3
 sudo -u postgres psql
 postgres=# \c alegoria
-alegoria=# CREATE EXTENSION postgis
+alegoria=# CREATE EXTENSION postgis;
 alegoria=# CREATE EXTENSION postgis_topology;
 alegoria=# \q
 ```
