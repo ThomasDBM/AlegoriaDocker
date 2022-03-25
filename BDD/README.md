@@ -70,4 +70,6 @@ Finally, we can complete our database with the following commands :
 python3 create_BDD.py postgres postgres alegoria localhost 5432
 ```
 
+python3 -m unittest
+python3 test_create_BDD.py
 ## Maintenance ##

@@ -1,5 +1,6 @@
 import sys
 import psycopg2
+import unittest
 from psycopg2.extras import execute_values
 
 # Some libraries whose not using currently
