@@ -42,7 +42,7 @@ sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key
 
 sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
 
-sudo apt install pgadmin4-dekstop
+sudo apt install pgadmin4-desktop
 ```
 
 Il faut ensuite s'assurer que le service est actif et en marche :
