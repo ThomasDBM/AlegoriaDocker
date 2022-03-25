@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS interne(
     pp geometry(PointZ,0) NOT NULL,
     focal geometry(PointZ,0) NOT NULL,
     skew FLOAT NOT NULL,
+    near_frustum_camera geometry(PointZ, 0) NOT NULL,
     distorsion integer ARRAY
 );
 """
@@ -126,7 +127,6 @@ CREATE TABLE IF NOT EXISTS images(
     id_images SERIAL PRIMARY KEY,
     t0 timestamp NOT NULL,
     t1 timestamp NOT NULL,
-    url VARCHAR NOT NULL,
     image VARCHAR NOT NULL,
     origine VARCHAR NOT NULL,
     qualite BIGINT,
@@ -135,7 +135,6 @@ CREATE TABLE IF NOT EXISTS images(
     resolution_max FLOAT,
     footprint geometry(Polygon, 0) NOT NULL,
     size_image geometry(Point, 0) NOT NULL,
-    near_frustum_camera geometry(PointZ, 0) NOT NULL,
     id_sources INT NOT NULL,
     id_georefs INT,
     id_masks INT,
