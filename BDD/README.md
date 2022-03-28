@@ -75,5 +75,4 @@ To execute the tests of the database creation script, we use the command (the te
 python3 BDD/script_implement/test/test_create_BDD.py
 ```
 
-
 ## Maintenance ##

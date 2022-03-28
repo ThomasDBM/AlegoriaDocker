@@ -2,10 +2,6 @@ import sys
 import psycopg2
 from psycopg2.extras import execute_values
 
-# Some libraries whose not using currently
-# import xml.etree.ElementTree as ET
-# import glob
-
 """
     Parameters for database's creation in command line
     ...
@@ -35,7 +31,6 @@ password = sys.argv[2] if len(sys.argv) > 2 else None
 database = sys.argv[3] if len(sys.argv) > 3 else None
 host     = sys.argv[4] if len(sys.argv) > 4 else None
 port     = sys.argv[5] if len(sys.argv) > 5 else None
-# filename = sys.argv[6] if len(sys.argv) > 6 else "*.xml" UNUSED CURRENTLY
 debug = False
 
 # requete de creation de la table masks
@@ -159,8 +154,6 @@ CREATE TABLE IF NOT EXISTS points_appuis(
 # Database connection block
 try:
 
-    # print(filename) UNUSED CURRENTLY
-
     # Connection to the database with giving parameters
     connection = psycopg2.connect(
     	user = user,
@@ -190,17 +183,6 @@ try:
     connection.commit()
 
     print("The database has been modified according to the queries made.")
-
-    """ UNUSED CURRENTLY
-    # When you add a set of data
-    for f in sorted(glob.glob(filename)):
-    	print(f,end='', flush=True)
-    	try:
-    		mydoc = ET.parse(f).getroot()
-    	except ET.ParseError as err:
-    		print(err, flush=True)
-    		continue
-	"""
 
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
