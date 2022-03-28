@@ -138,7 +138,6 @@ CREATE TABLE IF NOT EXISTS images(
     id_sources INT NOT NULL,
     id_georefs INT,
     id_masks INT,
-    UNIQUE(url),
     UNIQUE(image),
     FOREIGN KEY(id_sources) REFERENCES sources(id_sources),
     FOREIGN KEY(id_georefs) REFERENCES georefs(id_georefs),
