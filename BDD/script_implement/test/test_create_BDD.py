@@ -102,9 +102,17 @@ class TestCreateMethods(unittest.TestCase):
                             ON kcu.constraint_name = tco.constraint_name \
                             WHERE tco.constraint_type = 'PRIMARY KEY'") 
 
-            primary_keys = cursor.fetchall()
+            primary_keys_count = cursor.fetchall()
 
-            print(primary_keys[0][0])
+            cursor.execute("SELECT COUNT(kcu.column_name) as key_column \
+                            FROM information_schema.table_constraints tco \
+                            JOIN information_schema.key_column_usage kcu \
+                            ON kcu.constraint_name = tco.constraint_name \
+                            WHERE tco.constraint_type = 'PRIMARY KEY'")    
+
+            primary_keys = cursor.fetchall()         
+
+            print(primary_keys)
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR[' + filename +'] : '+ str(error))
@@ -114,7 +122,89 @@ class TestCreateMethods(unittest.TestCase):
                 cursor.close()
                 connection.close()
 
-        self.assertEqual(primary_keys[0][0], 10)
+        # 9 tables + la table postgis
+        self.assertEqual(primary_keys_count[0][0], 10)
+
+        # Verify the primary keys in the database
+        self.assertEqual(primary_keys[0][0], 'id_externe')
+        self.assertEqual(primary_keys[1][0], 'id_georefs')
+        self.assertEqual(primary_keys[2][0], 'id_images')
+        self.assertEqual(primary_keys[3][0], 'id_interne')
+        self.assertEqual(primary_keys[4][0], 'id_masks')
+        self.assertEqual(primary_keys[5][0], 'id_points_appuis')
+        self.assertEqual(primary_keys[6][0], 'id_sources')
+        self.assertEqual(primary_keys[7][0], 'id_transfo2d')
+        self.assertEqual(primary_keys[8][0], 'id_transfo3d')
+
+    def test_check_foreign_key(self):
+        try:
+            # Connection to the database with giving parameters
+            connection = psycopg2.connect(
+                user = "formation",
+                password = "formation",
+                host = "localhost",
+                port = "5432",
+                database = "postgres"
+                )
+
+            # Database pointer
+            cursor = connection.cursor()
+            # Execution of each SQL query
+            cursor.execute("SELECT ccu.column_name AS foreign_column_name \
+                            FROM information_schema.table_constraints AS tc \
+                            JOIN information_schema.key_column_usage AS kcu \
+                                ON tc.constraint_name = kcu.constraint_name \
+                                AND tc.table_schema = kcu.table_schema \
+                            JOIN information_schema.constraint_column_usage AS ccu \
+                                ON ccu.constraint_name = tc.constraint_name \
+                                AND ccu.table_schema = tc.table_schema \
+                            WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='images' \
+                            ORDER BY foreign_column_name;") 
+
+            foreign_images_keys = cursor.fetchall()
+
+            cursor.execute("SELECT ccu.column_name AS foreign_column_name \
+                            FROM information_schema.table_constraints AS tc \
+                            JOIN information_schema.key_column_usage AS kcu \
+                                ON tc.constraint_name = kcu.constraint_name \
+                                AND tc.table_schema = kcu.table_schema \
+                            JOIN information_schema.constraint_column_usage AS ccu \
+                                ON ccu.constraint_name = tc.constraint_name \
+                                AND ccu.table_schema = tc.table_schema \
+                            WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='georefs' \
+                            ORDER BY foreign_column_name;") 
+
+            foreign_georefs_keys = cursor.fetchall()
+
+            cursor.execute("SELECT ccu.column_name AS foreign_column_name \
+                            FROM information_schema.table_constraints AS tc \
+                            JOIN information_schema.key_column_usage AS kcu \
+                                ON tc.constraint_name = kcu.constraint_name \
+                                AND tc.table_schema = kcu.table_schema \
+                            JOIN information_schema.constraint_column_usage AS ccu \
+                                ON ccu.constraint_name = tc.constraint_name \
+                                AND ccu.table_schema = tc.table_schema \
+                            WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='points_appuis' \
+                            ORDER BY foreign_column_name;") 
+
+            foreign_points_appuis_keys = cursor.fetchall()            
+
+        except (Exception, psycopg2.Error) as error :
+            print('ERROR[' + filename +'] : '+ str(error))
+        finally:
+            # Closing database connection
+            if(connection):
+                cursor.close()
+                connection.close()
+
+        self.assertEqual(foreign_images_keys[0][0], "id_georefs")
+        self.assertEqual(foreign_images_keys[1][0], "id_masks")
+        self.assertEqual(foreign_images_keys[2][0], "id_sources")
+        self.assertEqual(foreign_georefs_keys[0][0], "id_externe")
+        self.assertEqual(foreign_georefs_keys[1][0], "id_interne")
+        self.assertEqual(foreign_georefs_keys[2][0], "id_transfo2d")
+        self.assertEqual(foreign_georefs_keys[3][0], "id_transfo3d")
+        self.assertEqual(foreign_points_appuis_keys[0][0], "id_images")
 
 if __name__ == '__main__':
     unittest.main()
