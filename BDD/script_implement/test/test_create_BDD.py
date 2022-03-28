@@ -21,19 +21,51 @@ class TestCreateMethods(unittest.TestCase):
             # Execution of each SQL query
             cursor.execute("SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'images' AND COLUMN_NAME = 'id_images'")
 
-            record_table = cursor.fetchall()
+            type_id_images_table = cursor.fetchall()
 
-            print(record_table)
+            cursor.execute("SELECT type, coord_dimension \
+                            FROM geometry_columns \
+                            WHERE f_table_schema = 'public' \
+                            AND f_table_name = 'interne' \
+                            AND f_geometry_column = 'focal'")
+
+            type_focal = cursor.fetchall()
+
+            cursor.execute("SELECT type, coord_dimension \
+                            FROM geometry_columns \
+                            WHERE f_table_schema = 'public' \
+                            AND f_table_name = 'images' \
+                            AND f_geometry_column = 'footprint'")
+
+            type_footprint_images = cursor.fetchall()
+
+            cursor.execute("SELECT type, coord_dimension \
+                            FROM geometry_columns \
+                            WHERE f_table_schema = 'public' \
+                            AND f_table_name = 'sources' \
+                            AND f_geometry_column = 'footprint'")
+
+            type_footprint_sources = cursor.fetchall()
 
         except (Exception, psycopg2.Error) as error :
-            print('ERROR[' + filename +'] : '+ str(error))
+            print('ERROR : '+ str(error))
         finally:
             # Closing database connection
             if(connection):
                 cursor.close()
                 connection.close()
 
-        self.assertEqual(record_table[0][0], 'integer')
+        self.assertEqual(type_id_images_table[0][0], 'integer')
+
+        # Verify geometry type and dimension
+        self.assertEqual(type_focal[0][0], 'POINT')
+        self.assertEqual(type_focal[0][1], 3)
+
+        self.assertEqual(type_footprint_images[0][0], 'POLYGON')
+        self.assertEqual(type_footprint_images[0][1], 2)
+
+        self.assertEqual(type_footprint_sources[0][0], 'MULTIPOLYGON')
+        self.assertEqual(type_footprint_sources[0][1], 2)
 
     def test_check_existing_tables(self):
         try:
@@ -70,8 +102,6 @@ class TestCreateMethods(unittest.TestCase):
 
             verif = cursor.fetchall()
 
-            print(verif)
-
         except (Exception, psycopg2.Error) as error :
             print('ERROR[' + filename +'] : '+ str(error))
         finally:
@@ -104,15 +134,14 @@ class TestCreateMethods(unittest.TestCase):
 
             primary_keys_count = cursor.fetchall()
 
-            cursor.execute("SELECT COUNT(kcu.column_name) as key_column \
+            cursor.execute("SELECT kcu.column_name as key_column \
                             FROM information_schema.table_constraints tco \
                             JOIN information_schema.key_column_usage kcu \
                             ON kcu.constraint_name = tco.constraint_name \
-                            WHERE tco.constraint_type = 'PRIMARY KEY'")    
+                            WHERE tco.constraint_type = 'PRIMARY KEY' \
+                            ORDER BY key_column;")    
 
             primary_keys = cursor.fetchall()         
-
-            print(primary_keys)
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR[' + filename +'] : '+ str(error))
