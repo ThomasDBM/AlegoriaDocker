@@ -86,12 +86,13 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(type_id_images_table[0][0], 'integer')
 
         # Verify geometry type and dimension
+        # Of focal
         self.assertEqual(type_focal[0][0], 'POINT')
         self.assertEqual(type_focal[0][1], 3)
-
+        # Of footprint in images table
         self.assertEqual(type_footprint_images[0][0], 'POLYGON')
         self.assertEqual(type_footprint_images[0][1], 2)
-
+        # Of footprint in soures table
         self.assertEqual(type_footprint_sources[0][0], 'MULTIPOLYGON')
         self.assertEqual(type_footprint_sources[0][1], 2)
 
