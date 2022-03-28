@@ -131,7 +131,7 @@ class TestCreateMethods(unittest.TestCase):
                             JOIN information_schema.key_column_usage kcu \
                             ON kcu.constraint_name = tco.constraint_name \
                             WHERE tco.constraint_type = 'PRIMARY KEY' \
-                            AND kcu.column_name LIKE 'id%'") 
+                            AND kcu.column_name LIKE 'id_%'") 
 
             primary_keys_count = cursor.fetchall()
 
@@ -140,7 +140,7 @@ class TestCreateMethods(unittest.TestCase):
                             JOIN information_schema.key_column_usage kcu \
                             ON kcu.constraint_name = tco.constraint_name \
                             WHERE tco.constraint_type = 'PRIMARY KEY' \
-                            AND kcu.column_name LIKE 'id%' \
+                            AND kcu.column_name LIKE 'id_%' \
                             ORDER BY key_column;")    
 
             primary_keys = cursor.fetchall()         
