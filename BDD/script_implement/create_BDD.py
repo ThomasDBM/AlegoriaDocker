@@ -28,7 +28,7 @@ from psycopg2.extras import execute_values
     Methods
     -------
     Creation of all the table in the database
-    """
+"""
 
 user     = sys.argv[1] if len(sys.argv) > 1 else None
 password = sys.argv[2] if len(sys.argv) > 2 else None

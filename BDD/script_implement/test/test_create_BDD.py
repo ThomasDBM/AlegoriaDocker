@@ -2,10 +2,29 @@ import unittest
 import psycopg2
 from psycopg2.extras import execute_values
 
+"""
+    File for tests the create_BDD.py file
+    ...
+
+    Attributes
+    ----------
+
+    Methods
+    -------
+    Four tests are implemented :
+        - One to check type of some attributes (test_check_attribute_type)
+        - One to check if the tables are in the database (test_check_existing_tables)
+        - One to check the primary key of the database (test_check_primary_key)
+        - One to check the foreign key of the database (test_check_foreign_key)
+"""
+
 class TestCreateMethods(unittest.TestCase):
 
     def test_check_attribute_type(self):
+        """A test to check important attribute of the database and their types"""
+
         try:
+
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
                 user = "postgres",
@@ -21,6 +40,7 @@ class TestCreateMethods(unittest.TestCase):
             # Execution of each SQL query
             cursor.execute("SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'images' AND COLUMN_NAME = 'id_images'")
 
+            # Retrieve the result
             type_id_images_table = cursor.fetchall()
 
             cursor.execute("SELECT type, coord_dimension \
@@ -29,6 +49,7 @@ class TestCreateMethods(unittest.TestCase):
                             AND f_table_name = 'interne' \
                             AND f_geometry_column = 'focal'")
 
+            # Retrieve the result
             type_focal = cursor.fetchall()
 
             cursor.execute("SELECT type, coord_dimension \
@@ -37,6 +58,7 @@ class TestCreateMethods(unittest.TestCase):
                             AND f_table_name = 'images' \
                             AND f_geometry_column = 'footprint'")
 
+            # Retrieve the result
             type_footprint_images = cursor.fetchall()
 
             cursor.execute("SELECT type, coord_dimension \
@@ -45,10 +67,12 @@ class TestCreateMethods(unittest.TestCase):
                             AND f_table_name = 'sources' \
                             AND f_geometry_column = 'footprint'")
 
+            # Retrieve the result
             type_footprint_sources = cursor.fetchall()
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR : '+ str(error))
+
         finally:
             # Closing database connection
             if(connection):
@@ -68,7 +92,10 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(type_footprint_sources[0][1], 2)
 
     def test_check_existing_tables(self):
+        """A test to check if database's table are well implemented"""
+
         try:
+
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
                 user = "postgres",
@@ -100,10 +127,12 @@ class TestCreateMethods(unittest.TestCase):
                             INTERSECT \
                             (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'points_appuis'))")
 
+            # Retrieve the result
             verif = cursor.fetchall()
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR : '+ str(error))
+
         finally:
             # Closing database connection
             if(connection):
@@ -113,7 +142,10 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(verif[0][0], True)
 
     def test_check_primary_key(self):
+        """A test to check if the primary keys are good"""
+        
         try:
+
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
                 user = "postgres",
@@ -125,6 +157,7 @@ class TestCreateMethods(unittest.TestCase):
 
             # Database pointer
             cursor = connection.cursor()
+
             # Execution of each SQL query
             cursor.execute("SELECT COUNT(kcu.column_name) as key_column \
                             FROM information_schema.table_constraints tco \
@@ -133,6 +166,7 @@ class TestCreateMethods(unittest.TestCase):
                             WHERE tco.constraint_type = 'PRIMARY KEY' \
                             AND kcu.column_name LIKE 'id_%'") 
 
+            # Retrieve the result
             primary_keys_count = cursor.fetchall()
 
             cursor.execute("SELECT kcu.column_name as key_column \
@@ -143,10 +177,12 @@ class TestCreateMethods(unittest.TestCase):
                             AND kcu.column_name LIKE 'id_%' \
                             ORDER BY key_column;")    
 
+            # Retrieve the result
             primary_keys = cursor.fetchall()         
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR : '+ str(error))
+
         finally:
             # Closing database connection
             if(connection):
@@ -168,7 +204,10 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(primary_keys[8][0], 'id_transfo3d')
 
     def test_check_foreign_key(self):
+        """A test to check if the foreign keys are good"""
+
         try:
+
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
                 user = "postgres",
@@ -180,6 +219,7 @@ class TestCreateMethods(unittest.TestCase):
 
             # Database pointer
             cursor = connection.cursor()
+
             # Execution of each SQL query
             cursor.execute("SELECT ccu.column_name AS foreign_column_name \
                             FROM information_schema.table_constraints AS tc \
@@ -192,6 +232,7 @@ class TestCreateMethods(unittest.TestCase):
                             WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='images' \
                             ORDER BY foreign_column_name;") 
 
+            # Retrieve the result
             foreign_images_keys = cursor.fetchall()
 
             cursor.execute("SELECT ccu.column_name AS foreign_column_name \
@@ -205,6 +246,7 @@ class TestCreateMethods(unittest.TestCase):
                             WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='georefs' \
                             ORDER BY foreign_column_name;") 
 
+            # Retrieve the result
             foreign_georefs_keys = cursor.fetchall()
 
             cursor.execute("SELECT ccu.column_name AS foreign_column_name \
@@ -218,10 +260,12 @@ class TestCreateMethods(unittest.TestCase):
                             WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name='points_appuis' \
                             ORDER BY foreign_column_name;") 
 
+            # Retrieve the result
             foreign_points_appuis_keys = cursor.fetchall()            
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR : '+ str(error))
+            
         finally:
             # Closing database connection
             if(connection):
