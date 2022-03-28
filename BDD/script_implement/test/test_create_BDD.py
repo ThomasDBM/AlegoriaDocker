@@ -8,11 +8,11 @@ class TestCreateMethods(unittest.TestCase):
         try:
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
-                user = "formation",
-                password = "formation",
+                user = "postgres",
+                password = "postgres",
                 host = "localhost",
                 port = "5432",
-                database = "postgres"
+                database = "alegoria"
                 )
             
             # Database pointer
@@ -71,11 +71,11 @@ class TestCreateMethods(unittest.TestCase):
         try:
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
-                user = "formation",
-                password = "formation",
+                user = "postgres",
+                password = "postgres",
                 host = "localhost",
                 port = "5432",
-                database = "postgres"
+                database = "alegoria"
                 )
 
             # Database pointer
@@ -116,11 +116,11 @@ class TestCreateMethods(unittest.TestCase):
         try:
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
-                user = "formation",
-                password = "formation",
+                user = "postgres",
+                password = "postgres",
                 host = "localhost",
                 port = "5432",
-                database = "postgres"
+                database = "alegoria"
                 )
 
             # Database pointer
@@ -169,11 +169,11 @@ class TestCreateMethods(unittest.TestCase):
         try:
             # Connection to the database with giving parameters
             connection = psycopg2.connect(
-                user = "formation",
-                password = "formation",
+                user = "postgres",
+                password = "postgres",
                 host = "localhost",
                 port = "5432",
-                database = "postgres"
+                database = "alegoria"
                 )
 
             # Database pointer
