@@ -33,7 +33,7 @@ host     = sys.argv[4] if len(sys.argv) > 4 else None
 port     = sys.argv[5] if len(sys.argv) > 5 else None
 debug = False
 
-# requete de creation de la table masks
+# An SQL query to build the masks table
 create_masks_table = """
 CREATE TABLE IF NOT EXISTS masks(
     id_masks SERIAL PRIMARY KEY,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS masks(
 );
 """
 
-# requete de creation de la table sources avec ajout de l'extension postgis
+# An SQL query to add the POSTGIS extent and build the sources table
 create_sources_table = """
 CREATE EXTENSION IF NOT EXISTS postgis;
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS sources(
 );
 """
 
-# requete de creation de la table interne
+# An SQL query to build the interne table
 create_interne_table = """
 CREATE TABLE IF NOT EXISTS interne(
     id_interne SERIAL PRIMARY KEY,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS interne(
 );
 """
 
-# requete de creation de la table externe
+# An SQL query to build the externe table
 create_externe_table = """
 CREATE TABLE IF NOT EXISTS externe(
     id_externe SERIAL PRIMARY KEY,
@@ -82,23 +82,23 @@ CREATE TABLE IF NOT EXISTS externe(
 );
 """
 
-# requete de creation de la table transfo2D
-create_transfo2D_table = """
-CREATE TABLE IF NOT EXISTS transfo2D(
+# An SQL query to build the transfo2d table
+create_transfo2d_table = """
+CREATE TABLE IF NOT EXISTS transfo2d(
     id_transfo2D SERIAL PRIMARY KEY,
     image_matrix integer ARRAY
 );
 """
 
-# requete de creation de la table transfo3D
-create_transfo3D_table = """
-CREATE TABLE IF NOT EXISTS transfo3D(
+# An SQL query to build the transfo3d table
+create_transfo3d_table = """
+CREATE TABLE IF NOT EXISTS transfo3d(
     id_transfo3D SERIAL PRIMARY KEY,
     image_matrix integer ARRAY
 );
 """
 
-# requete de creation de la table georefs
+# An SQL query to build the georefs table
 create_georefs_table = """
 CREATE TABLE IF NOT EXISTS georefs(
     id_georefs SERIAL PRIMARY KEY,
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS georefs(
 );
 """
 
-# requete de creation de la table images
+# An SQL query to build the pimages table
 create_images_table = """
 CREATE TABLE IF NOT EXISTS images(
     id_images SERIAL PRIMARY KEY,
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS images(
 );
 """
 
-# requete de creation de la table point_appuis
+# An SQL query to build the points_appuis table
 create_points_appuis_table = """
 CREATE TABLE IF NOT EXISTS points_appuis(
     id_points_appuis SERIAL PRIMARY KEY,
@@ -173,8 +173,8 @@ try:
     cursor.execute(create_sources_table)
     cursor.execute(create_interne_table)
     cursor.execute(create_externe_table)
-    cursor.execute(create_transfo2D_table)
-    cursor.execute(create_transfo3D_table)
+    cursor.execute(create_transfo2d_table)
+    cursor.execute(create_transfo3d_table)
     cursor.execute(create_georefs_table)
     cursor.execute(create_images_table)
     cursor.execute(create_points_appuis_table)
@@ -186,6 +186,7 @@ try:
 
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
+
 finally:
 	# Closing database connection
 	if(connection):

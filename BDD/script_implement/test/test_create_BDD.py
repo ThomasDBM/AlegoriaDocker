@@ -1,13 +1,10 @@
-import unittest
 import psycopg2
 from psycopg2.extras import execute_values
+import unittest
 
 """
     File for tests the create_BDD.py file
     ...
-
-    Attributes
-    ----------
 
     Methods
     -------
