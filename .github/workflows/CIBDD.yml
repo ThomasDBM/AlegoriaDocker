@@ -23,10 +23,10 @@ jobs:
           pg_isready
       - name: Create test user
         run: |
-          sudo -u test psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
+          sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
       - name: Create alegoria database
         run: |
-          sudo -u test createdb --owner=test alegoria
+          sudo -u postgres createdb --owner=test alegoria
           PGPASSWORD=test psql --username=test --host=localhost --list test
       - name: Fill database
         run: python3 BDD/script_implement/BDD_create.py test test test localhost 5432
