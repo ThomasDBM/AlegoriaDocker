@@ -70,6 +70,10 @@ Finally, we can complete our database with the following commands :
 python3 create_BDD.py postgres postgres alegoria localhost 5432
 ```
 
-python3 -m unittest
-python3 test_create_BDD.py
+To execute the tests of the database creation script, we use the command (the test libraries are already implemented with python3):
+```
+python3 BDD/script_implement/test/test_create_BDD.py
+```
+
+
 ## Maintenance ##
