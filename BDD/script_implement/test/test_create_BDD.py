@@ -4,9 +4,6 @@ from psycopg2.extras import execute_values
 
 class TestCreateMethods(unittest.TestCase):
 
-    def test_test(self):
-        self.assertEqual('foo'.upper(), 'FOO')
-
     def test_check_attribute_type(self):
         try:
             # Connection to the database with giving parameters
@@ -16,7 +13,8 @@ class TestCreateMethods(unittest.TestCase):
                 host = "localhost",
                 port = "5432",
                 database = "postgres"
-            )
+                )
+            
             # Database pointer
             cursor = connection.cursor()
 
@@ -46,7 +44,8 @@ class TestCreateMethods(unittest.TestCase):
                 host = "localhost",
                 port = "5432",
                 database = "postgres"
-            )
+                )
+
             # Database pointer
             cursor = connection.cursor()
 
@@ -82,6 +81,40 @@ class TestCreateMethods(unittest.TestCase):
                 connection.close()
 
         self.assertEqual(verif[0][0], True)
+
+    def test_check_primary_key(self):
+        try:
+            # Connection to the database with giving parameters
+            connection = psycopg2.connect(
+                user = "formation",
+                password = "formation",
+                host = "localhost",
+                port = "5432",
+                database = "postgres"
+                )
+
+            # Database pointer
+            cursor = connection.cursor()
+            # Execution of each SQL query
+            cursor.execute("SELECT COUNT(kcu.column_name) as key_column \
+                            FROM information_schema.table_constraints tco \
+                            JOIN information_schema.key_column_usage kcu \
+                            ON kcu.constraint_name = tco.constraint_name \
+                            WHERE tco.constraint_type = 'PRIMARY KEY'") 
+
+            primary_keys = cursor.fetchall()
+
+            print(primary_keys[0][0])
+
+        except (Exception, psycopg2.Error) as error :
+            print('ERROR[' + filename +'] : '+ str(error))
+        finally:
+            # Closing database connection
+            if(connection):
+                cursor.close()
+                connection.close()
+
+        self.assertEqual(primary_keys[0][0], 10)
 
 if __name__ == '__main__':
     unittest.main()
