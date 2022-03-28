@@ -21,10 +21,13 @@ jobs:
         run: |
           sudo systemctl start postgresql.service
           pg_isready
+      - name: Create postgres user
+        run: |
+          sudo -u postgres psql --command="CREATE USER postgres PASSWORD 'postgres'" --command="\du"
       - name: Create alegoria database
         run: |
           sudo -u postgres createdb --owner=postgres alegoria
-        #  PGPASSWORD=postgres psql --username=postgres --host=localhost --list test
+          PGPASSWORD=postgres psql --username=postgres --host=localhost --list postgres
       - name: Install pip 
         run : sudo apt-get install python3-pip 
       - name : Install library for pg connexion
