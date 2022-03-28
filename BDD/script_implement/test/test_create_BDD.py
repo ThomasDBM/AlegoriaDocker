@@ -37,12 +37,13 @@ class TestCreateMethods(unittest.TestCase):
             # Database pointer
             cursor = connection.cursor()
 
-            # Execution of each SQL query
+            # Execution of an SQL query to verify the type of id_images attribute
             cursor.execute("SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'images' AND COLUMN_NAME = 'id_images'")
 
             # Retrieve the result
             type_id_images_table = cursor.fetchall()
 
+            # Execution of an SQL query to verify the type of the focal attribute
             cursor.execute("SELECT type, coord_dimension \
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
@@ -52,6 +53,7 @@ class TestCreateMethods(unittest.TestCase):
             # Retrieve the result
             type_focal = cursor.fetchall()
 
+            # Execution of an SQL query to verify the type of the footprint attribute inside the images tables
             cursor.execute("SELECT type, coord_dimension \
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
@@ -61,6 +63,7 @@ class TestCreateMethods(unittest.TestCase):
             # Retrieve the result
             type_footprint_images = cursor.fetchall()
 
+            # Execution of an SQL query to verify the type of the footprint attribute inside the sources table
             cursor.execute("SELECT type, coord_dimension \
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
@@ -79,6 +82,7 @@ class TestCreateMethods(unittest.TestCase):
                 cursor.close()
                 connection.close()
 
+        # Verify id_images' type
         self.assertEqual(type_id_images_table[0][0], 'integer')
 
         # Verify geometry type and dimension
@@ -108,7 +112,7 @@ class TestCreateMethods(unittest.TestCase):
             # Database pointer
             cursor = connection.cursor()
 
-            # Execution of each SQL query
+            # Execution of an SQL query to check the existence of each tables in the database
             cursor.execute("SELECT EXISTS((SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'masks') \
 			                INTERSECT \
 			                (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'interne') \
@@ -139,6 +143,7 @@ class TestCreateMethods(unittest.TestCase):
                 cursor.close()
                 connection.close()
 
+        # TRUE if all the tables are instanciated
         self.assertEqual(verif[0][0], True)
 
     def test_check_primary_key(self):
@@ -158,7 +163,7 @@ class TestCreateMethods(unittest.TestCase):
             # Database pointer
             cursor = connection.cursor()
 
-            # Execution of each SQL query
+            # Execution of each SQL query to COUNT all primary_key of the database
             cursor.execute("SELECT COUNT(kcu.column_name) as key_column \
                             FROM information_schema.table_constraints tco \
                             JOIN information_schema.key_column_usage kcu \
@@ -169,6 +174,7 @@ class TestCreateMethods(unittest.TestCase):
             # Retrieve the result
             primary_keys_count = cursor.fetchall()
 
+            # Execution of an SQL query to check all primary key of the database, order by name
             cursor.execute("SELECT kcu.column_name as key_column \
                             FROM information_schema.table_constraints tco \
                             JOIN information_schema.key_column_usage kcu \
@@ -189,10 +195,10 @@ class TestCreateMethods(unittest.TestCase):
                 cursor.close()
                 connection.close()
 
-        # 9 tables + la table postgis
+        # Nine tables are instanciated in the database with this script
         self.assertEqual(primary_keys_count[0][0], 9)
 
-        # Verify the primary keys in the database
+        # Verify all the primary keys' names in the database
         self.assertEqual(primary_keys[0][0], 'id_externe')
         self.assertEqual(primary_keys[1][0], 'id_georefs')
         self.assertEqual(primary_keys[2][0], 'id_images')
@@ -220,7 +226,7 @@ class TestCreateMethods(unittest.TestCase):
             # Database pointer
             cursor = connection.cursor()
 
-            # Execution of each SQL query
+            # Execution of an SQL query to check all the foreign keys in images table
             cursor.execute("SELECT ccu.column_name AS foreign_column_name \
                             FROM information_schema.table_constraints AS tc \
                             JOIN information_schema.key_column_usage AS kcu \
@@ -235,6 +241,7 @@ class TestCreateMethods(unittest.TestCase):
             # Retrieve the result
             foreign_images_keys = cursor.fetchall()
 
+            # Execution of an SQL query to check all the foreign keys in georefs table
             cursor.execute("SELECT ccu.column_name AS foreign_column_name \
                             FROM information_schema.table_constraints AS tc \
                             JOIN information_schema.key_column_usage AS kcu \
@@ -249,6 +256,7 @@ class TestCreateMethods(unittest.TestCase):
             # Retrieve the result
             foreign_georefs_keys = cursor.fetchall()
 
+            # Execution of an SQL query to check all the foreign keys in points_appuis table
             cursor.execute("SELECT ccu.column_name AS foreign_column_name \
                             FROM information_schema.table_constraints AS tc \
                             JOIN information_schema.key_column_usage AS kcu \
@@ -265,20 +273,24 @@ class TestCreateMethods(unittest.TestCase):
 
         except (Exception, psycopg2.Error) as error :
             print('ERROR : '+ str(error))
-            
+
         finally:
             # Closing database connection
             if(connection):
                 cursor.close()
                 connection.close()
 
+        # Verify all the foreign keys' names
+        # In images tables
         self.assertEqual(foreign_images_keys[0][0], "id_georefs")
         self.assertEqual(foreign_images_keys[1][0], "id_masks")
         self.assertEqual(foreign_images_keys[2][0], "id_sources")
+        # In georefs table
         self.assertEqual(foreign_georefs_keys[0][0], "id_externe")
         self.assertEqual(foreign_georefs_keys[1][0], "id_interne")
         self.assertEqual(foreign_georefs_keys[2][0], "id_transfo2d")
         self.assertEqual(foreign_georefs_keys[3][0], "id_transfo3d")
+        # In points_appuis table
         self.assertEqual(foreign_points_appuis_keys[0][0], "id_images")
 
 if __name__ == '__main__':
