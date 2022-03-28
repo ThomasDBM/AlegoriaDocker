@@ -204,7 +204,7 @@ try:
 	"""
 
 except (Exception, psycopg2.Error) as error :
-	print('ERROR[' + filename +'] : '+ str(error))
+	print('ERROR : '+ str(error))
 finally:
 	# Closing database connection
 	if(connection):
