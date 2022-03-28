@@ -130,7 +130,8 @@ class TestCreateMethods(unittest.TestCase):
                             FROM information_schema.table_constraints tco \
                             JOIN information_schema.key_column_usage kcu \
                             ON kcu.constraint_name = tco.constraint_name \
-                            WHERE tco.constraint_type = 'PRIMARY KEY'") 
+                            WHERE tco.constraint_type = 'PRIMARY KEY' \
+                            AND kcu.column_name LIKE 'id%'") 
 
             primary_keys_count = cursor.fetchall()
 
@@ -139,6 +140,7 @@ class TestCreateMethods(unittest.TestCase):
                             JOIN information_schema.key_column_usage kcu \
                             ON kcu.constraint_name = tco.constraint_name \
                             WHERE tco.constraint_type = 'PRIMARY KEY' \
+                            AND kcu.column_name LIKE 'id%' \
                             ORDER BY key_column;")    
 
             primary_keys = cursor.fetchall()         
@@ -152,7 +154,7 @@ class TestCreateMethods(unittest.TestCase):
                 connection.close()
 
         # 9 tables + la table postgis
-        #self.assertEqual(primary_keys_count[0][0], 10)
+        self.assertEqual(primary_keys_count[0][0], 9)
 
         # Verify the primary keys in the database
         self.assertEqual(primary_keys[0][0], 'id_externe')
