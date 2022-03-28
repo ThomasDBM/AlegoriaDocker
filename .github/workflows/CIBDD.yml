@@ -32,4 +32,4 @@ jobs:
       - name : Fill database
         run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432
       - name : Do all tests
-        run : python3 BDD/script_implement/script_implement/test_create_BDD.py
+        run : python3 BDD/script_implement/test/test_create_BDD.py
