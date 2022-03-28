@@ -1,4 +1,4 @@
-name: Maven test
+name: CI for test the database
 on:
   push:
     branches:
