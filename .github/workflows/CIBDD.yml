@@ -28,6 +28,9 @@ jobs:
         run: |
           sudo -u postgres createdb --owner=test test
           PGPASSWORD=test psql --username=test --host=localhost --list test
+      - name : Install Postgis
+        run:
+          sudo apt install postgis postgresql-12-postgis-3
       - name: Install pip 
         run : sudo apt-get install python3-pip 
       - name : Install library for pg connexion
