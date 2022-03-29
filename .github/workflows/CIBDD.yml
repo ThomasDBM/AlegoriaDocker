@@ -23,18 +23,18 @@ jobs:
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v1
-      - name : Install pip
-        run : sudo apt-get install python3-pip 
-      - name : Install library
-        run: pip install psycopg2-binary
-      - name : Fill database
-        run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432
-      - name : Remove a data
-        run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432 points_appuis 0
-      - name : Do all tests
-        run : python3 BDD/script_implement/test/test_create_BDD.py
-      - name : Install python extension for postgresql
-        run : sudo apt-get install postgresql-plpython3-12
+#      - name : Install pip
+#        run : sudo apt-get install python3-pip 
+#      - name : Install library
+#        run: pip install psycopg2-binary
+#      - name : Fill database
+#        run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432
+#      - name : Remove a data
+#        run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432 points_appuis 0
+#      - name : Do all tests
+#        run : python3 BDD/script_implement/test/test_create_BDD.py
+#      - name : Install python extension for postgresql
+#        run : sudo apt-get install postgresql-plpython3-12
       - name : CREATE EXTENSION
         run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
         env:
