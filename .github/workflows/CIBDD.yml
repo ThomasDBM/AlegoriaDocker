@@ -37,3 +37,5 @@ jobs:
         run : sudo apt install postgresql-plpython3-12
       - name : Instance the remove function
         run : psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
+        env:
+          PGPASSWORD: postgres
