@@ -98,24 +98,6 @@ CREATE TABLE IF NOT EXISTS transfo3d(
 );
 """
 
-# An SQL query to build the georefs table
-create_georefs_table = """
-CREATE TABLE IF NOT EXISTS georefs(
-    id_georefs SERIAL PRIMARY KEY,
-    user_georef VARCHAR NOT NULL,
-    date timestamp NOT NULL,
-    georef_principal BOOL NOT NULL,
-    id_transfo3D INT NOT NULL,
-    id_transfo2D INT NOT NULL,
-    id_interne INT NOT NULL,
-    id_externe INT NOT NULL,
-    FOREIGN KEY(id_transfo3D) REFERENCES transfo3D(id_transfo3D),
-    FOREIGN KEY(id_transfo2D) REFERENCES transfo2D(id_transfo2D),
-    FOREIGN KEY(id_interne) REFERENCES interne(id_interne),
-    FOREIGN KEY(id_externe) REFERENCES externe(id_externe)
-);
-"""
-
 # An SQL query to build the pimages table
 create_images_table = """
 CREATE TABLE IF NOT EXISTS images(
@@ -131,11 +113,9 @@ CREATE TABLE IF NOT EXISTS images(
     footprint geometry(Polygon, 0) NOT NULL,
     size_image geometry(Point, 0) NOT NULL,
     id_sources INT NOT NULL,
-    id_georefs INT,
-    id_masks INT,
+    id_masks INT NOT NULL,
     UNIQUE(image),
     FOREIGN KEY(id_sources) REFERENCES sources(id_sources),
-    FOREIGN KEY(id_georefs) REFERENCES georefs(id_georefs),
     FOREIGN KEY(id_masks) REFERENCES masks(id_masks)
 );
 """
@@ -147,6 +127,26 @@ CREATE TABLE IF NOT EXISTS points_appuis(
     point_2d geometry(Point, 0),
     point_3d geometry(PointZ, 0),
     id_images INT NOT NULL,
+    FOREIGN KEY(id_images) REFERENCES images(id_images)
+);
+"""
+
+# An SQL query to build the georefs table
+create_georefs_table = """
+CREATE TABLE IF NOT EXISTS georefs(
+    id_georefs SERIAL PRIMARY KEY,
+    user_georef VARCHAR NOT NULL,
+    date timestamp NOT NULL,
+    georef_principal BOOL NOT NULL,
+    id_transfo3D INT NOT NULL,
+    id_transfo2D INT NOT NULL,
+    id_interne INT NOT NULL,
+    id_externe INT NOT NULL,
+    id_images INT NOT NULL,
+    FOREIGN KEY(id_transfo3D) REFERENCES transfo3D(id_transfo3D),
+    FOREIGN KEY(id_transfo2D) REFERENCES transfo2D(id_transfo2D),
+    FOREIGN KEY(id_interne) REFERENCES interne(id_interne),
+    FOREIGN KEY(id_externe) REFERENCES externe(id_externe),
     FOREIGN KEY(id_images) REFERENCES images(id_images)
 );
 """
@@ -175,9 +175,9 @@ try:
     cursor.execute(create_externe_table)
     cursor.execute(create_transfo2d_table)
     cursor.execute(create_transfo3d_table)
-    cursor.execute(create_georefs_table)
     cursor.execute(create_images_table)
     cursor.execute(create_points_appuis_table)
+    cursor.execute(create_georefs_table)
 
     # Commit all requests
     connection.commit()
