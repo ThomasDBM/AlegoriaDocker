@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
+#    services:
       postgres:
         image: postgis/postgis:12-3.1
         env:
@@ -33,10 +33,20 @@ jobs:
 #        run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432 points_appuis 0
 #      - name : Do all tests
 #        run : python3 BDD/script_implement/test/test_create_BDD.py
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Start PostgreSQL on Ubuntu
+        run: |
+          sudo systemctl start postgresql.service
+          pg_isready
+      - name: Create alegoria database
+        run: |
+          sudo -u postgres createdb --owner=postgres alegoria
+          PGPASSWORD=postgres psql --username=postgres --host=localhost --list postgres
       - name : Install python extension for postgresql
-        run : sudo apt-get install postgresql-plpython3-12
+        run : sudo apt-get install postgresql-plpython3-12 postgresql-12-postgis-3
       - name : restart the database
-        run : sudo pg_ctlcluster 12 main start
       - name : CREATE EXTENSION
         run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
         env:
