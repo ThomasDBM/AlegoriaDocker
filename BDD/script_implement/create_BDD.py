@@ -17,9 +17,7 @@ from psycopg2.extras import execute_values
     host : str
         hostname of the database (generally localhost)
     port : str
-        port of the database (generally 5432)
-    filename : str
-        name of the file to import    
+        port of the database (generally 5432)   
 
     Methods
     -------
