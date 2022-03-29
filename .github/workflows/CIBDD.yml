@@ -2,7 +2,7 @@ name: CI for test the database
 on:
   push:
     branches:
-      - Vignaud/correct_architecture_bdd
+      - Vignaud/script_remove_data
   pull_request:
     branches:
       - main
