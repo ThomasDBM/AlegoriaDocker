@@ -36,7 +36,7 @@ jobs:
       - name : Install python extension for postgresql
         run : sudo apt-get install postgresql-plpython3-12
       - name : restart the database
-        run : pg_ctlcluster 12 main start
+        run : sudo pg_ctlcluster 12 main start
       - name : CREATE EXTENSION
         run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
         env:
