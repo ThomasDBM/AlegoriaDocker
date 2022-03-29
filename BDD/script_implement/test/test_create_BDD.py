@@ -29,7 +29,7 @@ class TestCreateMethods(unittest.TestCase):
                 host = "localhost",
                 port = "5432",
                 database = "alegoria"
-                )
+            )
             
             # Database pointer
             cursor = connection.cursor()
@@ -40,7 +40,7 @@ class TestCreateMethods(unittest.TestCase):
             # Retrieve the result
             type_id_images_table = cursor.fetchall()
 
-            # Execution of an SQL query to verify the type of the focal attribute
+            # Execution of an SQL query to verify the type of focal attribute
             cursor.execute("SELECT type, coord_dimension \
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
@@ -105,7 +105,7 @@ class TestCreateMethods(unittest.TestCase):
                 host = "localhost",
                 port = "5432",
                 database = "alegoria"
-                )
+            )
 
             # Database pointer
             cursor = connection.cursor()
@@ -156,7 +156,7 @@ class TestCreateMethods(unittest.TestCase):
                 host = "localhost",
                 port = "5432",
                 database = "alegoria"
-                )
+            )
 
             # Database pointer
             cursor = connection.cursor()
@@ -219,7 +219,7 @@ class TestCreateMethods(unittest.TestCase):
                 host = "localhost",
                 port = "5432",
                 database = "alegoria"
-                )
+            )
 
             # Database pointer
             cursor = connection.cursor()
@@ -280,14 +280,14 @@ class TestCreateMethods(unittest.TestCase):
 
         # Verify all the foreign keys' names
         # In images tables
-        self.assertEqual(foreign_images_keys[0][0], "id_georefs")
-        self.assertEqual(foreign_images_keys[1][0], "id_masks")
-        self.assertEqual(foreign_images_keys[2][0], "id_sources")
+        self.assertEqual(foreign_images_keys[0][0], "id_masks")
+        self.assertEqual(foreign_images_keys[1][0], "id_sources")
         # In georefs table
         self.assertEqual(foreign_georefs_keys[0][0], "id_externe")
-        self.assertEqual(foreign_georefs_keys[1][0], "id_interne")
-        self.assertEqual(foreign_georefs_keys[2][0], "id_transfo2d")
-        self.assertEqual(foreign_georefs_keys[3][0], "id_transfo3d")
+        self.assertEqual(foreign_georefs_keys[1][0], "id_images")
+        self.assertEqual(foreign_georefs_keys[2][0], "id_interne")
+        self.assertEqual(foreign_georefs_keys[3][0], "id_transfo2d")
+        self.assertEqual(foreign_georefs_keys[4][0], "id_transfo3d")
         # In points_appuis table
         self.assertEqual(foreign_points_appuis_keys[0][0], "id_images")
 
