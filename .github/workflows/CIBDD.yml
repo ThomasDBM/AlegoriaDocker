@@ -42,7 +42,6 @@ jobs:
           sudo -u postgres createdb --owner=postgres alegoria PGPASSWORD=postgres psql --username=postgres --host=localhost --list postgres
       - name : Install python extension for postgresql
         run : sudo apt-get install postgresql-plpython3-12 postgresql-12-postgis-3
-      - name : restart the database
       - name : CREATE EXTENSION
         run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
         env:
