@@ -1,5 +1,3 @@
---CREATE LANGUAGE plpython3u;
-
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
 CREATE OR REPLACE FUNCTION test(tablename char, id int)
