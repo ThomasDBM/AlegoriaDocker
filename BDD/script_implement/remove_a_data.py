@@ -41,6 +41,13 @@ tables = ["masks", "sources", "interne", "externe", "transfo2d", "transfo3d", "i
 
 if tablename in tables:
     print("La table demandée existe")
+    try:
+        int(id)
+        print("L'id est bien un nombre.")
+        it_is = True
+    except ValueError:
+        print("L'id n'est pas un nombre !")
+        it_is = False
 else:
     print("La table demandée est inexistante ! Les tables de la base sont : ")
     i = 0
