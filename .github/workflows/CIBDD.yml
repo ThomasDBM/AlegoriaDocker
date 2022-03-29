@@ -34,8 +34,8 @@ jobs:
 #      - name : Do all tests
 #        run : python3 BDD/script_implement/test/test_create_BDD.py
     steps:
-      - uses: actions/checkout@v2
-
+      - name: Checkout latest code
+        uses: actions/checkout@v2
       - name: Start PostgreSQL on Ubuntu
         run: |
           sudo systemctl start postgresql.service
