@@ -9,3 +9,5 @@
 --INSERT INTO transfo2d(id_transfo2d, image_matrix) VALUES (0, '{0, 0}');
 --INSERT INTO transfo3d(id_transfo3d, image_matrix) VALUES (0, '{0, 0}');
 --INSERT INTO images(id_images, t0, t1, image, origine, qualite, resolution_min, resolution_moy, resolution_max, footprint, size_image, id_sources, id_masks) VALUES (0, '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', 'pouet', 'test', 0, 0, 0, 0, ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POINT(0 0)', 2154), 0, 0);
+INSERT INTO points_appuis(id_points_appuis, point_2d, point_3d, id_images) 
+VALUES (0, ST_GeomFromText('POINT(0 0)', 2154), ST_GeomFromText('POINTZ(0 0 0)', 2154), 0);
