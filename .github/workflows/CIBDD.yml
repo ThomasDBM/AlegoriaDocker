@@ -39,7 +39,7 @@ jobs:
 #          pg_isready
       - name: Create alegoria database
         run: |
-          sudo -u postgres createdb --owner=postgres alegoria PGPASSWORD=postgres psql --username=postgres --host=localhost --list postgres
+          sudo -u postgres createdb --owner=postgres alegoria PGPASSWORD=postgres psql --username=postgres --host=localhost 
       - name : Install python extension for postgresql
         run : sudo apt-get install postgresql-plpython3-12 postgresql-12-postgis-3
       - name : CREATE EXTENSION
