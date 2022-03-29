@@ -34,8 +34,8 @@ jobs:
       - name : Do all tests
         run : python3 BDD/script_implement/test/test_create_BDD.py
       - name : Install python extension for postgresql
-        run : sudo apt install postgresql-plpython3-10
+        run : sudo apt install postgresql-plpython-10
       - name : Instance the remove function
         run : psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
         env:
-          PGPASSWORD: postgres
+          PGPASSWORD: postgres 
