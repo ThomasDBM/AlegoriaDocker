@@ -23,8 +23,6 @@ jobs:
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v1
-      #- name: Install Postgis
-       # run: sudo apt install postgis postgresql-12-postgis-3
       - name : Install pip
         run : sudo apt-get install python3-pip 
       - name : Install libray
