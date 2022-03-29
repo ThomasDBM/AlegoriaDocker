@@ -36,3 +36,14 @@ port      = sys.argv[5] if len(sys.argv) > 5 else None
 tablename = sys.argv[6] if len(sys.argv) > 6 else None
 id        = sys.argv[7] if len(sys.argv) > 7 else None
 debug = False
+
+tables = ["masks", "sources", "interne", "externe", "transfo2d", "transfo3d", "images", "points_appuis", "georefs"]
+
+if tablename in tables:
+    print("La table demandée existe")
+else:
+    print("La table demandée est inexistante ! Les tables de la base sont : ")
+    i = 0
+    for x in range(0, len(tables)):
+        print("- " + tables[i])
+        i+=1
