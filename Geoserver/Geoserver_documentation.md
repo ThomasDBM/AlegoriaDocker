@@ -1,21 +1,4 @@
-# Installation Geoserver 
-
-## Installation Docker
-
-depuis la racine du repository récuperer l'image distante thinkwhere/geoserver:
-```
-docker pull thinkwhere/geoserver
-```
-lancer un conteneur avec :
-```
-docker run     --name=geoserver_8085     -p 8085:8080     --rm     -v Geoserver/geoserver_data:/opt/geoserver/data_dir     -e "GEOSERVER_LOG_LOCATION=/opt/geoserver/data_dir/logs/geoserver_8085.log"     -t thinkwhere/geoserver
-```
-se connecter sur 
-```
-0.0.0.0:8085/geoserver
-```
-
-## Installation local Geoserver et BDD
+# Installation Geoserver et BDD
 
 
 ######        ######
@@ -159,6 +142,27 @@ CREATE VIEW <nom_vue> [<nom_des_colonnes>]
 AS <requête> [WITH CHECK OPTION];
 ```
 
-Vous pouvez créer la vue de 2 façons
+
+
+######                        ######
+#### Ajout couche sur Geoserver ####
+######                        ######
+
+Pour ajouter une nouvelle couche sur Geoserver, cliquez sur Entrepôts puis sur `Ajouter un nouvel entrepôt`.
+Sur cette nouvelle page, sélectionnez le type de données que vous voulez importer. Ici on sélectionnera `Shapefile` dans `Source de données Vecteur`.
+
+Indiquez le nom de la source de données que vous voulez lui donner ainci que l'emplacement du Shapefile en cliquant sur Parcourir à droite.
+Pour tout document se trouvant dans vos dossiers sous formation, dans le menu déroulant de la nouvelle fenêtre, choississez `dossier Home`, puis cliquez sur `home/formation/`.
+
+Une fois sauvegardé, Geoserver vous demandera quelques informations supplémentaires notamment dans la partie Système de Référence de Coordonnées.
+Si le SRC natif reste inconnu, vous pouvez le choisir manuellement avec le bouton "Rechercher".
+
+Renseigner les emprises natives (si elles ne l'étaient pas déjà) ainsi que les emprises géographiques. (Les 2 emprises doivent être similaires.)
+
+Cliquez sur sauvegarder en bas de page.
+
+### Afficher la donnée sur Geoserver
+
+Dans le menu à gauche de la page, sélectionnez `Prévisualisation de la couche` puis cliquez sur la donnée que vous voulez visualiser avec OpenLayers.
 
 
