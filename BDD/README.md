@@ -75,4 +75,7 @@ To execute the tests of the database creation script, we use the command (the te
 python3 BDD/script_implement/test/test_create_BDD.py
 ```
 
+psql formation -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
+
+
 ## Maintenance ##

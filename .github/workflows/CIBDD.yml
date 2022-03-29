@@ -33,3 +33,7 @@ jobs:
         run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432 points_appuis 0
       - name : Do all tests
         run : python3 BDD/script_implement/test/test_create_BDD.py
+      - name : Install python extension for postgresql
+        run : sudo apt install postgresql-plpython3-12
+      - name : Instance the remove function
+        run : psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
