@@ -11,8 +11,8 @@ AS $$
 		return True
 	if tablename == 'images':
 		plpy.execute('DELETE FROM points_appuis WHERE id_'+ tablename + ' = ' + str(id))
-		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
 		plpy.execute('DELETE FROM georefs WHERE id_'+ tablename + ' = ' + str(id))
+		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
 		return True
 	if tablename == 'interne':
 		plpy.execute('DELETE FROM georefs WHERE id_'+ tablename + ' = ' + str(id))

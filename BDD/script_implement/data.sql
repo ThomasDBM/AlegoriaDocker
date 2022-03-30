@@ -11,5 +11,5 @@ SELECT test('interne', 0), test('externe', 0), test('transfo2d',0);
 SELECT test('pouet', 1);
 SELECT test('images', 0);
 SELECT test('masks', 0), test('sources', 0);
-
-
+SELECT test('georefs', 0);
+SELECT test('images', 340);
