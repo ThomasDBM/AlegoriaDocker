@@ -22,7 +22,9 @@ jobs:
       - name: Create test user
         run: sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
       - name: Create test database
-        run: sudo -u postgres createdb --owner=test test | PGPASSWORD=test psql --username=test --host=localhost --list test
+        run: sudo -u postgres createdb --owner=test test 
+      - name: Connect to the database
+        run: PGPASSWORD=test psql --username=test --host=localhost --list test
 
 #      - name : CREATE EXTENSION
 #        run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
