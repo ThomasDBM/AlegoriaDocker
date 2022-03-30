@@ -1,0 +1,45 @@
+name: CI for test the database
+on:
+  push:
+    branches:
+      - Vignaud/script_remove_data
+  pull_request:
+    branches:
+      - main
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:12-3.1
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: alegoria
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name : Install extension 
+        run : sudo apt-get install postgresql-plpython3-12 postgis postgresql-12-postgis-3
+      - name: Start PostgreSQL on Ubuntu
+        run: 
+          sudo systemctl start postgresql.service
+      - name : Service ready ?
+          pg_isready
+      - name: Create test user
+        run: 
+          sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
+      - name: Create test database
+        run: 
+          sudo -u postgres createdb --owner=test test | PGPASSWORD=test psql --username=test --host=localhost --list test
+
+#      - name : CREATE EXTENSION
+#        run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
+#        env:
+#          PGPASSWORD: postgres
+#      - name : Instance the remove function
+#        run : psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
+#        env:
+#          PGPASSWORD: postgres 
