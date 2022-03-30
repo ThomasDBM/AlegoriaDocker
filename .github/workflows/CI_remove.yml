@@ -18,7 +18,7 @@ jobs:
       - name: Start PostgreSQL on Ubuntu
         run: sudo systemctl start postgresql.service
       - name : Service ready ?
-          run: pg_isready
+        run: pg_isready
       - name: Create test user
         run: sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
       - name: Create test database
