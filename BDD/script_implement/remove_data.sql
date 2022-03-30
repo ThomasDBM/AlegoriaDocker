@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
-CREATE OR REPLACE FUNCTION test(tablename char, id int)
+CREATE OR REPLACE FUNCTION remove_data(tablename char, id int)
   RETURNS char
 AS $$
 	if tablename == 'georefs':
