@@ -1,6 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
-DROP FUNCTION remove_data(char, integer);
 CREATE OR REPLACE FUNCTION test(tablename char, id int)
   RETURNS char
 AS $$
