@@ -16,16 +16,13 @@ jobs:
       - name : Install extension 
         run : sudo apt-get install postgresql-plpython3-12 postgis postgresql-12-postgis-3
       - name: Start PostgreSQL on Ubuntu
-        run: 
-          sudo systemctl start postgresql.service
+        run: sudo systemctl start postgresql.service
       - name : Service ready ?
-          pg_isready
+          run: pg_isready
       - name: Create test user
-        run: 
-          sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
+        run: sudo -u postgres psql --command="CREATE USER test PASSWORD 'test'" --command="\du"
       - name: Create test database
-        run: 
-          sudo -u postgres createdb --owner=test test | PGPASSWORD=test psql --username=test --host=localhost --list test
+        run: sudo -u postgres createdb --owner=test test | PGPASSWORD=test psql --username=test --host=localhost --list test
 
 #      - name : CREATE EXTENSION
 #        run : psql postgres -h localhost -d alegoria -c 'CREATE EXTENSION plpython3u'
