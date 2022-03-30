@@ -8,8 +8,10 @@ on:
       - main
       - dev
 jobs:
+  # Build the database and tests on its implementation
   build:
     runs-on: ubuntu-latest
+    # Use Docker image of postgis
     services:
       postgres:
         image: postgis/postgis:12-3.1
@@ -33,6 +35,8 @@ jobs:
         run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432 points_appuis 0
       - name : Do all tests
         run : python3 BDD/script_implement/test/test_create_BDD.py
+  
+  # Build the database and tests on different functionalities
   functions_testing:
     runs-on: ubuntu-20.04
     steps:
