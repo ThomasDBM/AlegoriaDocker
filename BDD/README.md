@@ -43,13 +43,14 @@ postgres=# GRANT ALL PRIVILEGES ON DATABASE alegoria to postgres;
 postgres=# \q
 ```
 
-Since we are handling spatial data, we also need to install the postgis extension to our database :
+Since we are handling spatial data, we also need to install the postgis and python extensions for our database :
 ```
-sudo apt install postgis postgresql-12-postgis-3
+sudo apt-get install postgresql-plpython3-12 postgis postgresql-12-postgis-3
 sudo -u postgres psql
 postgres=# \c alegoria
 alegoria=# CREATE EXTENSION postgis;
 alegoria=# CREATE EXTENSION postgis_topology;
+alegoria=# CREATE EXTENSION CREATE plpython3u;
 alegoria=# \q
 ```
 
@@ -75,7 +76,9 @@ To execute the tests of the database creation script, we use the command (the te
 python3 BDD/script_implement/test/test_create_BDD.py
 ```
 
-psql formation -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
-
+To add the data management functions to our database, we will use the following command :
+```
+psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
+```
 
 ## Maintenance ##
