@@ -83,6 +83,6 @@ jobs:
       
       # TESTS
       - name : Do all tests for the remove function
-        run : psql test -h localhost -d test -f BDD/script_implement/data.sql
+        run : psql test -h localhost -d test -f BDD/script_implement/test/test_remove_data.sql
         env:
           PGPASSWORD: test
