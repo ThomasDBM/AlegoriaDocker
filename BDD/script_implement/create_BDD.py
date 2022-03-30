@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS interne(
     pp geometry(PointZ,0) NOT NULL,
     focal geometry(PointZ,0) NOT NULL,
     skew FLOAT NOT NULL,
-    near_frustum_camera geometry(PointZ, 0) NOT NULL,
     distorsion integer ARRAY
 );
 """
@@ -88,27 +87,13 @@ CREATE TABLE IF NOT EXISTS transfo2d(
 );
 """
 
-# An SQL query to build the transfo3d table
-create_transfo3d_table = """
-CREATE TABLE IF NOT EXISTS transfo3d(
-    id_transfo3D SERIAL PRIMARY KEY,
-    image_matrix integer ARRAY
-);
-"""
-
-# An SQL query to build the pimages table
+# An SQL query to build the images table
 create_images_table = """
 CREATE TABLE IF NOT EXISTS images(
     id_images SERIAL PRIMARY KEY,
     t0 timestamp NOT NULL,
     t1 timestamp NOT NULL,
     image VARCHAR NOT NULL,
-    origine VARCHAR NOT NULL,
-    qualite BIGINT,
-    resolution_min FLOAT,
-    resolution_moy FLOAT,
-    resolution_max FLOAT,
-    footprint geometry(Polygon, 0) NOT NULL,
     size_image geometry(Point, 0) NOT NULL,
     id_sources INT NOT NULL,
     id_masks INT NOT NULL,
@@ -136,12 +121,13 @@ CREATE TABLE IF NOT EXISTS georefs(
     user_georef VARCHAR NOT NULL,
     date timestamp NOT NULL,
     georef_principal BOOL NOT NULL,
-    id_transfo3D INT NOT NULL,
+    footprint geometry(Polygon, 0) NOT NULL,
+    near geometry(POLYGON, 0) NOT NULL,
+    far geometry(POLYGON, 0) NOT NULL,
     id_transfo2D INT NOT NULL,
     id_interne INT NOT NULL,
     id_externe INT NOT NULL,
     id_images INT NOT NULL,
-    FOREIGN KEY(id_transfo3D) REFERENCES transfo3D(id_transfo3D),
     FOREIGN KEY(id_transfo2D) REFERENCES transfo2D(id_transfo2D),
     FOREIGN KEY(id_interne) REFERENCES interne(id_interne),
     FOREIGN KEY(id_externe) REFERENCES externe(id_externe),
@@ -172,7 +158,6 @@ try:
     cursor.execute(create_interne_table)
     cursor.execute(create_externe_table)
     cursor.execute(create_transfo2d_table)
-    cursor.execute(create_transfo3d_table)
     cursor.execute(create_images_table)
     cursor.execute(create_points_appuis_table)
     cursor.execute(create_georefs_table)
