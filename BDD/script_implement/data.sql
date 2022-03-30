@@ -11,4 +11,4 @@ INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, id_transfo2
 SELECT test('interne', 0), test('externe', 0), test('transfo2d',0); 
 SELECT test('pouet', 1);
 SELECT test('images', 0);
---SELECT test('masks', 0), test('sources', 0);
+SELECT test('masks', 0), test('sources', 0);
