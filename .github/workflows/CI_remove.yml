@@ -27,8 +27,16 @@ jobs:
         run: sudo -u postgres createdb --owner=test test 
       - name: Connect to the database
         run: PGPASSWORD=test psql --username=test --host=localhost --list test
-      - name : CREATE EXTENSION
+      - name : CREATE EXTENSION python
         run : psql test -h localhost -d test -c 'CREATE EXTENSION plpython3u'
+        env:
+          PGPASSWORD: test
+      - name : CREATE EXTENSION postgis
+        run : psql test -h localhost -d test -c 'CREATE EXTENSION postgis'
+        env:
+          PGPASSWORD: test
+      - name : CREATE EXTENSION postgis-topology
+        run : psql test -h localhost -d test -c 'CREATE EXTENSION postgis_topology'
         env:
           PGPASSWORD: test
 #      - name : Instance the remove function
