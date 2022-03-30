@@ -29,5 +29,11 @@ AS $$
 		plpy.execute('DELETE FROM georefs WHERE id_'+ tablename + ' = ' + str(id))
 		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
 		return True
+	if tablename == 'masks':
+		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
+		return True
+	if tablename == 'sources':
+		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
+		return True
 	return False
 $$ LANGUAGE plpython3u;
