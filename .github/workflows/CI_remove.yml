@@ -28,7 +28,7 @@ jobs:
       - name: Connect to the database
         run: PGPASSWORD=test psql --username=test --host=localhost --list test
       - name : CREATE EXTENSION
-        run : psql test -h localhost -d test -c 'CREATE EXTENSION plpython3u'
+        run : psql postgres -h localhost -d test -c 'CREATE EXTENSION plpython3u'
         env:
           PGPASSWORD: test
 #      - name : Instance the remove function
