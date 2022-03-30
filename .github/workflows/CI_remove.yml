@@ -39,7 +39,7 @@ jobs:
         run : psql test -h localhost -d test -c 'CREATE EXTENSION postgis_topology'
         env:
           PGPASSWORD: test
-#      - name : Instance the remove function
-#        run : psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
-#        env:
-#          PGPASSWORD: postgres 
+      - name : Instance the remove function
+        run : psql test -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
+        env:
+          PGPASSWORD: test 
