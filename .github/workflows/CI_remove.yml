@@ -11,6 +11,8 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
+      - name: Remove psql 14
+        run: sudo apt-get --purge remove postgresql postgresql-14
       - name: Checkout latest code
         uses: actions/checkout@v1
       - name : Install extension 
