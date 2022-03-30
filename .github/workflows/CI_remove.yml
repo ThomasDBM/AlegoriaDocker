@@ -42,4 +42,8 @@ jobs:
       - name : Instance the remove function
         run : psql test -h localhost -d test -f BDD/script_implement/remove_data.sql
         env:
-          PGPASSWORD: test 
+          PGPASSWORD: test
+      - name : Instance the remove function
+        run : psql test -h localhost -d test -f BDD/script_implement/data.sql
+        env:
+          PGPASSWORD: test
