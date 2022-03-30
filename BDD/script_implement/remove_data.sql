@@ -25,10 +25,10 @@ AS $$
 	if tablename == 'transfo2d':
 		plpy.execute('DELETE FROM georefs WHERE id_'+ tablename + ' = ' + str(id))
 		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
-		return 'The georefs table and its dependencies (georefs) have been deleted'
+		return 'The transfo2d table and its dependencies (georefs) have been deleted'
 	if tablename == 'masks':
 		return 'To be reviewed'
 	if tablename == 'sources':
-		return 'The source table has a dedicated batch delete function'
+		return 'The sources table has a dedicated batch delete function'
 	return False
 $$ LANGUAGE plpython3u;
