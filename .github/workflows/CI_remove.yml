@@ -9,12 +9,12 @@ on:
       - dev
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v1
       - name : Install extension 
-        run : sudo apt-get install postgresql-plpython3-12 postgis postgresql-12-postgis-3
+        run : sudo apt-get install postgresql-plpython3-14 postgis postgresql-14-postgis-3
       - name: Start PostgreSQL on Ubuntu
         run: sudo systemctl start postgresql.service
       - name : Service ready ?
