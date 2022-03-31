@@ -57,6 +57,8 @@ jobs:
         run: sudo -u postgres createdb --owner=test test 
       - name: Connect to the database
         run: PGPASSWORD=test psql --username=test --host=localhost --list test
+
+      # CREATE ALL EXTENSIONS
       - name : CREATE EXTENSION python
         run : psql test -h localhost -d test -c 'CREATE EXTENSION plpython3u'
         env:
@@ -69,11 +71,16 @@ jobs:
         run : psql test -h localhost -d test -c 'CREATE EXTENSION postgis_topology'
         env:
           PGPASSWORD: test
-      - name : Instance the remove function
+
+      # Add functions
+      - name : Instance the remove_data function
         run : psql test -h localhost -d test -f BDD/script_implement/remove_data.sql
         env:
           PGPASSWORD: test
-
+      - name : Instance the remove_batch_data function
+        run : psql test -h localhost -d test -f BDD/script_implement/remove_batch_data.sql
+        env:
+          PGPASSWORD: test
 
       - name : Install pip
         run : sudo apt-get install python3-pip 
