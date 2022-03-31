@@ -32,5 +32,5 @@ AS $$
 		return 'The masks table has been removed'
 	if tablename == 'sources':
 		return 'The sources table has a dedicated batch delete function'
-	return False
+	return 'The table does not exist in the database'
 $$ LANGUAGE plpython3u;
