@@ -9,7 +9,7 @@ on:
       - main
       - dev
 jobs:
-  # BUILD DATABASE AND TESTS
+  # BUILD DATABASE AND TESTS ON THE BUILD
   build:
     runs-on: ubuntu-20.04
     # Use Docker image of postgis
@@ -37,7 +37,7 @@ jobs:
       - name : Do all tests
         run : python3 BDD/script_implement/test/test_create_BDD.py
   
-  # Build the database and tests on different functionalities
+  # BUIL DATABASE AND TESTS ON FUNCTIONS
   functions_testing:
     runs-on: ubuntu-20.04
     steps:
