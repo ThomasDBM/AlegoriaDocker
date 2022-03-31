@@ -54,7 +54,7 @@ class TestCreateMethods(unittest.TestCase):
             cursor.execute("SELECT type, coord_dimension \
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
-                            AND f_table_name = 'images' \
+                            AND f_table_name = 'georefs' \
                             AND f_geometry_column = 'footprint'")
 
             # Retrieve the result
@@ -118,8 +118,6 @@ class TestCreateMethods(unittest.TestCase):
                             (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'externe') \
                             INTERSECT \
                             (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'transfo2d') \
-                            INTERSECT \
-                            (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'transfo3d') \
                             INTERSECT \
                             (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'georefs') \
                             INTERSECT \
@@ -194,7 +192,7 @@ class TestCreateMethods(unittest.TestCase):
                 connection.close()
 
         # Nine tables are instanciated in the database with this script
-        self.assertEqual(primary_keys_count[0][0], 9)
+        self.assertEqual(primary_keys_count[0][0], 8)
 
         # Verify all the primary keys' names in the database
         self.assertEqual(primary_keys[0][0], 'id_externe')
@@ -205,7 +203,6 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(primary_keys[5][0], 'id_points_appuis')
         self.assertEqual(primary_keys[6][0], 'id_sources')
         self.assertEqual(primary_keys[7][0], 'id_transfo2d')
-        self.assertEqual(primary_keys[8][0], 'id_transfo3d')
 
     def test_check_foreign_key(self):
         """A test to check if the foreign keys are good"""
@@ -287,7 +284,6 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(foreign_georefs_keys[1][0], "id_images")
         self.assertEqual(foreign_georefs_keys[2][0], "id_interne")
         self.assertEqual(foreign_georefs_keys[3][0], "id_transfo2d")
-        self.assertEqual(foreign_georefs_keys[4][0], "id_transfo3d")
         # In points_appuis table
         self.assertEqual(foreign_points_appuis_keys[0][0], "id_images")
 
