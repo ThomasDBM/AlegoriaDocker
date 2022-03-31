@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - Vignaud/script_remove_data
+      - Vignaud/remove_batch_data
   pull_request:
     branches:
       - main
