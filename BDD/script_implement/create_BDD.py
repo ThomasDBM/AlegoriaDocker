@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS images(
     image VARCHAR NOT NULL,
     size_image geometry(Point, 0) NOT NULL,
     id_sources INT NOT NULL,
-    id_masks INT NOT NULL,
+    id_masks INT,
     UNIQUE(image),
     FOREIGN KEY(id_sources) REFERENCES sources(id_sources),
     FOREIGN KEY(id_masks) REFERENCES masks(id_masks)
