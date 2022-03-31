@@ -1,5 +1,22 @@
+-- If the extension does not exist, we create it
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
+/*
+    Parameters for the remove_data function
+    ...
+
+    Attributes
+    ----------
+    tablename : char
+        name of the table to remove
+    id : int
+        id of the data to remove
+
+    Methods
+    -------
+    A data is removed from the database, as well as its dependencies if necessary
+	The type of treatment will depend on the table to be deleted
+*/
 CREATE OR REPLACE FUNCTION remove_data(tablename char, id int)
   RETURNS char
 AS $$

@@ -1,5 +1,22 @@
+-- If the extension does not exist, we create it
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
+/*
+    Parameters for the remove_batch_data function
+    ...
+
+    Attributes
+    ----------
+    tablename : char
+        name of the table to remove
+    id : int
+        id of the batch of data to remove
+
+    Methods
+    -------
+    A batch of data is removed from the database, as well as its dependencies 
+	The type of treatment will depend on the table to be deleted
+*/
 CREATE OR REPLACE FUNCTION remove_batch_data(tablename char, id int)
   RETURNS char
 AS $$

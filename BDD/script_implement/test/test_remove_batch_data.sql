@@ -1,4 +1,10 @@
---INSERT INTO masks(id_masks, url) VALUES (2, 'pouet3');
+/*
+    Test for the remove_batch_data function
+*/
+
+-- Test with the suppression of one batch of data
+
+INSERT INTO masks(id_masks, url) VALUES (2, 'pouet3');
 
 INSERT INTO sources(id_sources, credit, home, url, viewer, thumbnail, lowres, highres, iip, footprint) VALUES (2, 'mi3', 'mi3', 'mi3', 'mi3', 'mi3', 'mi3', 'mi3', 'mi3', ST_GeomFromText('MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))', 2154));
 
