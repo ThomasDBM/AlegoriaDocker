@@ -9,9 +9,9 @@ on:
       - main
       - dev
 jobs:
-  # Build the database and tests on its implementation
+  # BUILD DATABASE AND TESTS
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     # Use Docker image of postgis
     services:
       postgres:
