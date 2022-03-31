@@ -72,7 +72,7 @@ jobs:
         env:
           PGPASSWORD: test
 
-      # Add functions
+      # ADD FUNCTIONS
       - name : Instance the remove_data function
         run : psql test -h localhost -d test -f BDD/script_implement/remove_data.sql
         env:
@@ -82,6 +82,7 @@ jobs:
         env:
           PGPASSWORD: test
 
+      # INSTALL PIP AND LIBRARY
       - name : Install pip
         run : sudo apt-get install python3-pip 
       - name : Install library
