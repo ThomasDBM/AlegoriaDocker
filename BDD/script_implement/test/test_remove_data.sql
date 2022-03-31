@@ -23,4 +23,5 @@ INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) V
 INSERT INTO points_appuis(id_points_appuis, point_2d, point_3d, id_images) VALUES (1, ST_GeomFromText('POINT(0 0)', 2154), ST_GeomFromText('POINTZ(0 0 0)', 2154), 1);
 INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, footprint, near, far, id_transfo2d, id_interne, id_externe, id_images) VALUES (1, 'ama2', '2016-06-22 19:10:25-07', TRUE, ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), 1, 1, 1, 1);
 
-SELECT remove_data('images', 1);
+SELECT remove_data('masks', 1);
+--SELECT remove_data('images', 1);

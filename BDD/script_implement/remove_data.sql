@@ -27,7 +27,9 @@ AS $$
 		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
 		return 'The transfo2d table and its dependencies (georefs) have been deleted'
 	if tablename == 'masks':
-		return 'To be reviewed'
+		plpy.execute('UPDATE images SET id_' + tablename + ' = NULL WHERE id_'+ tablename + ' = ' + str(id))
+		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
+		return 'The masks table has been removed'
 	if tablename == 'sources':
 		return 'The sources table has a dedicated batch delete function'
 	return False
