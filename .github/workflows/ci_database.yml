@@ -90,7 +90,11 @@ jobs:
         run : python3 BDD/script_implement/create_BDD.py test test test localhost 5432
       
       # TESTS
-      - name : Do all tests for the remove function
+      - name : Do all tests for the remove_data function
         run : psql test -h localhost -d test -f BDD/script_implement/test/test_remove_data.sql
+        env:
+          PGPASSWORD: test
+      - name : Do all tests for the remove_batch_data function
+        run : psql test -h localhost -d test -f BDD/script_implement/test/test_remove_batch_data.sql
         env:
           PGPASSWORD: test
