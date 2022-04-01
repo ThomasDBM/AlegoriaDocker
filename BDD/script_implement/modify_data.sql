@@ -17,10 +17,15 @@ CREATE EXTENSION IF NOT EXISTS plpython3u;
     A data is modify
 */
 
-CREATE OR REPLACE FUNCTION modify_points_appuis(id_points_appuis int DEFAULT -1, point2d char DEFAULT '', point3d char DEFAULT '', EPSG int DEFAULT 0)
+CREATE OR REPLACE FUNCTION modify_points_appuis(id_points_appuis int DEFAULT -1, point2d char DEFAULT '', point3d char DEFAULT '', epsg int DEFAULT 0)
   RETURNS char
 AS $$
 	if id_points_appuis > -1:
+		if point2d != '' and epsg != 0:
+			plpy.execute('UPDATE points_appuis SET point2d = ST_GeomFromText('+point2d+', '+epsg+'))
+			return 'Changement des points appuis 2D'
+		if point3d != '' and epsg != 0:
+			return 'Changement des points appuis 3D'
 		return 'id of the data to change'
 	else :
 		return 'no id specify'
