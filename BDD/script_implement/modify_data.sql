@@ -18,15 +18,20 @@ CREATE EXTENSION IF NOT EXISTS plpython3u;
 */
 
 CREATE OR REPLACE FUNCTION modify_georefs(id_georefs int DEFAULT -1, user_georef char DEFAULT '', date char DEFAULT '', georef_principal bool DEFAULT null, 
-										  footprint char DEFAULT '', near char DEFAULT '', far char DEFAULT '', id_transfo2d int DEFAULT -1,
+										  footprint char DEFAULT '', epsg int DEFAULT 0, near char DEFAULT '', far char DEFAULT '', id_transfo2d int DEFAULT -1,
 										 id_interne int DEFAULT -1, id_externe int DEFAULT -1, id_images int DEFAULT -1)
   RETURNS char
 AS $$
 	if id_georefs > -1:
 		if user_georef != '':
 			plpy.execute('UPDATE georefs SET user_georef = ' + user_georef)
+		if date != '':
+			plpy.execute('UPDATE georefs SET date = ' + date)
 		if georef_principal is not None:
 			plpy.execute('UPDATE georefs SET georef_principal = ' + str(georef_principal))
+		if footprint != '' and epsg != 0:
+			plpy.execute('UPDATE georefs SET footprint = ST_GeomFromText(' + footprint + ', ' + str(epsg) + ')')
+			
 		return 'All changes done'
 	return 'Nothing to change or wrong id'
 $$ LANGUAGE plpython3u;
