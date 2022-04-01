@@ -2,19 +2,39 @@
 CREATE EXTENSION IF NOT EXISTS plpython3u;
 
 /*
-    Parameters for the 
+    Parameters for the modify_georefs function
     ...
 
     Attributes
     ----------
-    tablename : char
-        name of the table to remove
-    id : int
-        id of the data to remove
-
+    id_georefs: int
+        id of the table to modify
+    user_georefs: char
+        name of the user who created this georeferencing
+	date : timestamp
+		date of georefencing creation
+	georef_principal: bool
+		this is the principal georeferencing of an image or not
+	footprint: geometry
+		footprint of the image referenced by the georeferencing
+	epsg: int
+		SRID of the geometry
+	near: geometry
+		nearest polygon to the camera
+	far: geometry
+		fathest polygon to the camera
+	id_transfo2d: int
+		id of the associated transfo_2d table
+	id_interne: int
+		id of the associated interne table
+	id_externe: int
+		id of the associated externe table
+	id_images: int
+		id of the associated images table
+	
     Methods
     -------
-    A data is modify
+    Replace data in the georefs table
 */
 
 CREATE OR REPLACE FUNCTION modify_georefs(id_georefs int DEFAULT -1, user_georef char DEFAULT '', date char DEFAULT '', georef_principal bool DEFAULT null, 
@@ -52,6 +72,25 @@ AS $$
 	return 'Nothing to change or wrong id'
 $$ LANGUAGE plpython3u;
 
+/*
+    Parameters for the modify_points_appuis function
+    ...
+
+    Attributes
+    ----------
+    id_points_appuis: int
+        id of the table to modify
+    point2d: geom (char)
+        2D support points of an image
+	point3d: geom (char)
+		3D support points of an image
+	epsg: int
+		SRID of the geometry
+	
+    Methods
+    -------
+    Replace data in the georefs table
+*/
 CREATE OR REPLACE FUNCTION modify_points_appuis(id_points_appuis int DEFAULT -1, point2d char DEFAULT '', point3d char DEFAULT '', epsg int DEFAULT 0)
   RETURNS char
 AS $$
