@@ -22,9 +22,10 @@ CREATE OR REPLACE FUNCTION modify_points_appuis(id_points_appuis int DEFAULT -1,
 AS $$
 	if id_points_appuis > -1:
 		if point2d != '' and epsg != 0:
-			plpy.execute('UPDATE points_appuis SET point2d = ST_GeomFromText('+point2d+', '+epsg+'))
+			plpy.execute('UPDATE points_appuis SET point_2d = ST_GeomFromText(' + point2d + ', ' + str(epsg) + ')')
 			return 'Changement des points appuis 2D'
 		if point3d != '' and epsg != 0:
+			plpy.execute('UPDATE points_appuis SET point_3d = ST_GeomFromText(' + point3d + ', ' + str(epsg) + ')')
 			return 'Changement des points appuis 3D'
 		return 'id of the data to change'
 	else :
