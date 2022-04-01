@@ -55,8 +55,19 @@ $$ LANGUAGE plpython3u;
 CREATE OR REPLACE FUNCTION modify_points_appuis(id_points_appuis int DEFAULT -1, point2d char DEFAULT '', point3d char DEFAULT '', epsg int DEFAULT 0)
   RETURNS char
 AS $$
-	if id_points_appuis > -1:
-		if (point2d and point3d) != '':
+
+	id_points_tot = plpy.execute('SELECT id_points_appuis FROM points_appuis')
+	count_id = plpy.execute('SELECT COUNT(id_points_appuis) AS tot FROM points_appuis')
+	
+	plpy.notice(id_points_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_points_tot[i]['id_points_appuis']))
+		
+	if id_points_appuis > -1  and str(id_points_appuis) in tab:
+		if (point2d and point3d) != '' and epsg == (2154 or 4978):
 			plpy.execute('UPDATE points_appuis SET point_2d = ST_GeomFromText(' + point2d + ', ' + str(epsg) + '), point_3d = ST_GeomFromText(' + point3d + ', ' + str(epsg) + ')')
 			return 'All points change'
 		if point2d != '' and epsg == (2154 or 4978):
@@ -67,6 +78,6 @@ AS $$
 			return 'Change of 2d support points'
 		return 'This SRID is not supported. The accepted SRIDs are 2154 and 4978'
 	else :
-		return 'No id specify'
-	return 'Nothing to change or wrong id'
+		return 'Id is not in the table'
+	return 'Nothing to change'
 $$ LANGUAGE plpython3u;
