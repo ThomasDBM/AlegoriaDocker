@@ -69,9 +69,6 @@ def insertToImages(files, balisesImages):
     except ET.ParseError as err:
         print(err)
 
-
-
-
     
 
 def addDataset(conn,fichiers):
@@ -140,7 +137,7 @@ if __name__=="__main__":
     password = "2309"
     dbName = "Alegoria"
 
-    conn =  psycopg2.connect(host = host, user =user, password = password, dbname = dbName)
+    conn =  psycopg2.connect(host=host, user=user, password=password, dbname=dbName)
 
     print("Do you want adding a dataset or complet a dataset ?")
     rep = input("(dataset/complete)?")
