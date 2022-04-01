@@ -120,3 +120,59 @@ AS $$
 		return 'Id is not in the table'
 	return 'Nothing to change'
 $$ LANGUAGE plpython3u;
+
+/*
+    Parameters for the modify_points_appuis function
+    ...
+
+    Attributes
+    ----------
+    id_images: int
+        id of the table to modify
+    t0: timestamp
+        start date of the image
+	t1: timestamp
+		end date of the image
+	size_image: geom (point)
+		size of the image
+	id_sources:
+		id of the associated sources table
+	id_masks:
+		id of the associated masks table
+    Methods
+    -------
+    Replace data in the georefs table
+*/
+CREATE OR REPLACE FUNCTION modify_images(id_images int DEFAULT -1, t0 char DEFAULT '', t1 char DEFAULT '', size_image char DEFAULT '',
+										id_sources int DEFAULT -1, id_masks int DEFAULT -1)
+  RETURNS char
+AS $$
+
+	id_images_tot = plpy.execute('SELECT id_images FROM images')
+	count_id = plpy.execute('SELECT COUNT(id_images) AS tot FROM images')
+	
+	plpy.notice(id_images_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_images_tot[i]['id_images']))
+		
+	if id_images > -1  and str(id_images) in tab:
+		return 'test'
+		if t0 != '':
+			plpy.execute('UPDATE images SET t0 = ' + t0)
+		if t1 != '':
+			plpy.execute('UPDATE images SET t1 = ' + t1)
+		if size_image != '':
+			plpy.execute('UPDATE images SET size_image = ST_GeomFromText(' + size_image + ', 2154')
+		if id_sources > -1:
+			plpy.execute('UPDATE images SET id_sources = ' + str(id_sources))
+		if id_masks > -1:
+			plpy.execute('UPDATE images SET id_masks = ' + str(id_masks))
+		return 'All changes are done'
+	else :
+		return 'Id is not in the table'
+	return 'Nothing to change'
+$$ LANGUAGE plpython3u;
+
