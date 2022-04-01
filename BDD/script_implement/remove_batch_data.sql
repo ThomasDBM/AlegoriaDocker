@@ -30,9 +30,21 @@ AS $$
 
 		for i in range(0, count_id[0]['tot'], 1):
 			plpy.execute('DELETE FROM points_appuis WHERE id_images = ' + str(id_images[i]['id_images']))
+			
+			id_georefs = plpy.execute('SELECT id_georefs FROM georefs WHERE id_images = ' + str(id_images[i]['id_images']))
+			count_id_georefs = plpy.execute('SELECT COUNT(id_georefs) AS tot FROM georefs WHERE id_images = ' + str(id_images[i]['id_images']))
+			
+			plpy.notice(id_georefs.__str__())
+			plpy.notice(count_id_georefs.__str__())
+			
 			plpy.execute('DELETE FROM georefs WHERE id_images = ' + str(id_images[i]['id_images']))
 			plpy.execute('DELETE FROM images WHERE id_images = ' + str(id_images[i]['id_images']))
-		
+			
+			for i in range(0, count_id_georefs[0]['tot'], 1):
+				plpy.execute('DELETE FROM interne WHERE id_interne = ' + str(id_georefs[i]['id_georefs']))
+				plpy.execute('DELETE FROM externe WHERE id_externe = ' + str(id_georefs[i]['id_georefs']))
+				plpy.execute('DELETE FROM transfo2d WHERE id_transfo2d = ' + str(id_georefs[i]['id_georefs']))
+			
 		plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
 		return 'The source table has been deleted, along with the associated data set'
 		
