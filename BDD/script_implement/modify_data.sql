@@ -133,6 +133,8 @@ $$ LANGUAGE plpython3u;
         start date of the image
 	t1: timestamp
 		end date of the image
+	image: char
+		unique id of an image
 	size_image: geom (point)
 		size of the image
 	id_sources:
@@ -143,8 +145,8 @@ $$ LANGUAGE plpython3u;
     -------
     Replace data in the georefs table
 */
-CREATE OR REPLACE FUNCTION modify_images(id_images int DEFAULT -1, t0 char DEFAULT '', t1 char DEFAULT '', size_image char DEFAULT '',
-										id_sources int DEFAULT -1, id_masks int DEFAULT -1)
+CREATE OR REPLACE FUNCTION modify_images(id_images int DEFAULT -1, t0 char DEFAULT '', t1 char DEFAULT '', image char DEFAULT '',
+										 size_image char DEFAULT '', id_sources int DEFAULT -1, id_masks int DEFAULT -1)
   RETURNS char
 AS $$
 
@@ -159,11 +161,12 @@ AS $$
 		tab.append(str(id_images_tot[i]['id_images']))
 		
 	if id_images > -1  and str(id_images) in tab:
-		return 'test'
 		if t0 != '':
 			plpy.execute('UPDATE images SET t0 = ' + t0)
 		if t1 != '':
 			plpy.execute('UPDATE images SET t1 = ' + t1)
+		if image != '':
+			plpy.execute('UPDATE images SET image = ' + image)
 		if size_image != '':
 			plpy.execute('UPDATE images SET size_image = ST_GeomFromText(' + size_image + ', 2154')
 		if id_sources > -1:

@@ -21,3 +21,9 @@ SELECT modify_georefs(id_georefs => 1, user_georef => '''AMAMAA''', georef_princ
 
 SELECT modify_georefs(id_georefs => 4, user_georef => '''AMAAMA''', footprint => '''POLYGON((0 0,0 0,0 0,0 0,0 0))''',
 					 epsg => 2154);
+					 
+-- Test 3
+
+SELECT modify_images(id_images => 1);
+
+SELECT modify_images(id_images => 4, image => '''mimimimimi''');
