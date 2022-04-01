@@ -17,7 +17,7 @@ CREATE EXTENSION IF NOT EXISTS plpython3u;
     A data is modify
 */
 
-CREATE OR REPLACE FUNCTION modify_georefs(id_georefs int DEFAULT -1, user_georef char DEFAULT '', date char DEFAULT '', georef_principal bool DEFAULT False, 
+CREATE OR REPLACE FUNCTION modify_georefs(id_georefs int DEFAULT -1, user_georef char DEFAULT '', date char DEFAULT '', georef_principal bool DEFAULT null, 
 										  footprint char DEFAULT '', near char DEFAULT '', far char DEFAULT '', id_transfo2d int DEFAULT -1,
 										 id_interne int DEFAULT -1, id_externe int DEFAULT -1, id_images int DEFAULT -1)
   RETURNS char
@@ -25,6 +25,9 @@ AS $$
 	if id_georefs > -1:
 		if user_georef != '':
 			plpy.execute('UPDATE georefs SET user_georef = ' + user_georef)
+		if georef_principal is not None:
+			plpy.execute('UPDATE georefs SET georef_principal = ' + str(georef_principal))
+		return 'All changes done'
 	return 'Nothing to change or wrong id'
 $$ LANGUAGE plpython3u;
 
