@@ -101,6 +101,6 @@ jobs:
         env:
           PGPASSWORD: test
       - name : Instance the modify data functions
-        run : psql test -h localhost -d test -f BDD/script_implement/test_modify_data.sql
+        run : psql test -h localhost -d test -f BDD/script_implement/test/test_modify_data.sql
         env:
           PGPASSWORD: test
