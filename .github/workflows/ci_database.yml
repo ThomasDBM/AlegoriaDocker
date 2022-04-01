@@ -3,14 +3,15 @@ on:
   push:
     branches:
       - Vignaud/script_remove_data
+      - Vignaud/remove_batch_data
   pull_request:
     branches:
       - main
       - dev
 jobs:
-  # Build the database and tests on its implementation
+  # BUILD DATABASE AND TESTS ON THE BUILD
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     # Use Docker image of postgis
     services:
       postgres:
@@ -36,7 +37,7 @@ jobs:
       - name : Do all tests
         run : python3 BDD/script_implement/test/test_create_BDD.py
   
-  # Build the database and tests on different functionalities
+  # BUIL DATABASE AND TESTS ON FUNCTIONS
   functions_testing:
     runs-on: ubuntu-20.04
     steps:
@@ -56,6 +57,8 @@ jobs:
         run: sudo -u postgres createdb --owner=test test 
       - name: Connect to the database
         run: PGPASSWORD=test psql --username=test --host=localhost --list test
+
+      # CREATE ALL EXTENSIONS
       - name : CREATE EXTENSION python
         run : psql test -h localhost -d test -c 'CREATE EXTENSION plpython3u'
         env:
@@ -68,12 +71,18 @@ jobs:
         run : psql test -h localhost -d test -c 'CREATE EXTENSION postgis_topology'
         env:
           PGPASSWORD: test
-      - name : Instance the remove function
+
+      # ADD FUNCTIONS
+      - name : Instance the remove_data function
         run : psql test -h localhost -d test -f BDD/script_implement/remove_data.sql
         env:
           PGPASSWORD: test
+      - name : Instance the remove_batch_data function
+        run : psql test -h localhost -d test -f BDD/script_implement/remove_batch_data.sql
+        env:
+          PGPASSWORD: test
 
-
+      # INSTALL PIP AND LIBRARY
       - name : Install pip
         run : sudo apt-get install python3-pip 
       - name : Install library
@@ -82,7 +91,11 @@ jobs:
         run : python3 BDD/script_implement/create_BDD.py test test test localhost 5432
       
       # TESTS
-      - name : Do all tests for the remove function
+      - name : Do all tests for the remove_data function
         run : psql test -h localhost -d test -f BDD/script_implement/test/test_remove_data.sql
+        env:
+          PGPASSWORD: test
+      - name : Do all tests for the remove_batch_data function
+        run : psql test -h localhost -d test -f BDD/script_implement/test/test_remove_batch_data.sql
         env:
           PGPASSWORD: test
