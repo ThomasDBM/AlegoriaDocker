@@ -2,8 +2,7 @@ name: CI for test the build and remove function
 on:
   push:
     branches:
-      - Vignaud/script_remove_data
-      - Vignaud/remove_batch_data
+      - Vignaud/modify_a_data
   pull_request:
     branches:
       - main
