@@ -7,4 +7,14 @@
 
 SELECT modify_points_appuis(-1, '''POINT(0 0)''', '''POINTZ(0 0 0)''', 2154);
 SELECT modify_points_appuis(1, '''POINT(0 0)''', '''POINTZ(0 0 0)''', 215);
-SELECT modify_points_appuis(1, '''POINT(1 1)''', '''POINTZ(1 1 1)''', 2154);
+SELECT modify_points_appuis(1, '''POINT(2 2)''', '''POINTZ(2 2 2)''', 2154);
+
+-- Test 2
+
+--INSERT INTO interne(id_interne, pp, focal, skew, distorsion) VALUES (4, ST_GeomFromText('POINTZ(0 0 0)', 2154), ST_GeomFromText('POINTZ(0 0 0)', 2154), 0, '{0, 0}');
+--INSERT INTO externe(id_externe, point, quaternion, srid) VALUES (4, ST_GeomFromText('POINTZ(0 0 0)', 2154), ST_GeomFromText('POINTZ(0 0 0)', 2154), 2154);
+--INSERT INTO transfo2d(id_transfo2d, image_matrix) VALUES (4, '{0, 0}');
+
+--INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, footprint, near, far, id_transfo2d, id_interne, id_externe, id_images) VALUES (4, 'ama4', '2016-06-22 19:10:25-07', TRUE, ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), 4, 4, 4, 4);
+
+SELECT modify_georefs(1, user_georef => '''AMAAMA''', georef_principal => False);
