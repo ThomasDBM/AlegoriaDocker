@@ -108,3 +108,20 @@ SELECT remove_batch_data('sources', 1);
 In this example, we want to remove the first source of the database (id = 1) from the source table. The function will also remove the dependencies affected by the deletion of the source. That is, the associated images, the georeferencing with the associated internal/external and transfo2d tables.
 
 ### Modify a data
+
+The modify_data file contains a set of 8 functions integrated in the database, each allowing the modification of data on a table:
+- modify_georefs allowing the modification of a data of the georeferencing table
+- modify_support_points allowing the modification of support points
+- modify_images to modify an image
+- modify_externe to modify the interne table
+- modify_interne to modify the externe table
+- modify_transfo2d to modify the transfo2d table
+- modify_sources to modify the sources table
+- modify_masks to modify the masks table
+
+Each of these functions must be called with an existing id, and take as argument one of the parameters to change on a data. Here is an example:
+```
+SELECT modify_images(id_images => 4, image => '''UniqueId''');
+```
+
+The name of the attribute must be specified, followed by the characters *=>* to allow a specific attribute to take a particular value. Only the attributes that need to be changed must be entered (in this case the image attribute). The strings must be entered with triple quotes (''text'') for the functions to work properly. Note that geometries and matrices must be entered as char to be replaced
