@@ -166,3 +166,176 @@ Cliquez sur sauvegarder en bas de page.
 Dans le menu à gauche de la page, sélectionnez `Prévisualisation de la couche` puis cliquez sur la donnée que vous voulez visualiser avec OpenLayers.
 
 
+
+######                                        ######
+#### Création de carte de chaleur sur Geoserver ####
+######                                        ######
+
+# Méthode de travail
+
+Geoserver ne crée pas directement de carte de chaleur, c'est le développeur qui va créer un style "heatmap" qui pourra s'appliquer à n'importe quelle couche il voudra.
+
+Voici comment nous allons procéder pour créer une carte de chaleur :
+
+1. Création fonction sur SQL qui permet de créer une grille de point dans une géométrie passée en paramètre.
+2. Création d'une vue sur Geoserver à partir de la fonction SQL.
+3. On applique un style 'carte de chaleur' à la vue.
+
+
+# 1. Création fonction SQL
+
+Dans la BDD `alegoria` sur pgAdmin, vérifier si la fonction `I_Grid_Point_Distance` existe. Dans le cas contraire, ouvrez une Query tool et tapez :
+
+```
+CREATE OR REPLACE FUNCTION public.I_Grid_Point_Distance(geom public.geometry, x_side decimal, y_side decimal)
+RETURNS public.geometry AS $BODY$
+DECLARE
+x_min decimal;
+x_max decimal;
+y_max decimal;
+x decimal;
+y decimal;
+returnGeom public.geometry[];
+i integer := -1;
+srid integer := 4326;
+input_srid integer;
+BEGIN
+CASE st_srid(geom) WHEN 0 THEN
+    geom := ST_SetSRID(geom, srid);
+        ----RAISE NOTICE 'No SRID Found.';
+    ELSE
+        ----RAISE NOTICE 'SRID Found.';
+END CASE;
+    input_srid:=st_srid(geom);
+    geom := st_transform(geom, srid);
+    x_min := ST_XMin(geom);
+    x_max := ST_XMax(geom);
+    y_max := ST_YMax(geom);
+    y := ST_YMin(geom);
+    x := x_min;
+    i := i + 1;
+    returnGeom[i] := st_setsrid(ST_MakePoint(x, y), srid);
+<<yloop>>
+LOOP
+IF (y > y_max) THEN
+    EXIT;
+END IF;
+
+CASE i WHEN 0 THEN 
+    y := ST_Y(returnGeom[0]);
+ELSE 
+    y := ST_Y(ST_Project(st_setsrid(ST_MakePoint(x, y), srid), y_side, radians(0))::geometry);
+END CASE;
+
+x := x_min;
+<<xloop>>
+LOOP
+  IF (x > x_max) THEN
+      EXIT;
+  END IF;
+    i := i + 1;
+    returnGeom[i] := st_setsrid(ST_MakePoint(x, y), srid);
+    x := ST_X(ST_Project(st_setsrid(ST_MakePoint(x, y), srid), x_side, radians(90))::geometry);
+END LOOP xloop;
+END LOOP yloop;
+RETURN
+ST_CollectionExtract(st_transform(ST_Intersection(st_collect(returnGeom), geom), input_srid), 1);
+END;
+$BODY$ LANGUAGE plpgsql IMMUTABLE;
+```
+
+# 2. Création vue Geoserver
+
+Créez une vue dans Geoserver que vous appelerez `PointGridView`à partir de la BDD alegoria.
+Dans la partie SQL, entrez :
+```
+SELECT I_Grid_Point_Distance(footprint, 1000, 1000) from cliches
+```
+N'oubliez pas de renseigner les emprises dans la rubrique Publication.
+
+# 3. Création style Heatmap et application du style sur la vue
+
+Créez un style dans Geoserver avec un style par défaut de point que vous appelerez `Heatmap`.
+Dans la partie code, renseignez le code suivant : 
+
+```
+<?xml version="1.0" encoding="ISO-8859-1"?>
+     <StyledLayerDescriptor version="1.0.0"
+         xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"
+         xmlns="http://www.opengis.net/sld"
+         xmlns:ogc="http://www.opengis.net/ogc"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+       <NamedLayer>
+         <Name>Heatmap</Name>
+        <UserStyle>
+          <Title>Heatmap</Title>
+          <Abstract>A heatmap surface showing population density</Abstract>
+          <FeatureTypeStyle>
+            <Transformation>
+              <ogc:Function name="vec:Heatmap">
+                <ogc:Function name="parameter">
+                  <ogc:Literal>data</ogc:Literal>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>weightAttr</ogc:Literal>
+                  <ogc:Literal>pop2000</ogc:Literal>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>radiusPixels</ogc:Literal>
+                  <ogc:Function name="env">
+                    <ogc:Literal>radius</ogc:Literal>
+                    <ogc:Literal>100</ogc:Literal>
+                  </ogc:Function>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>pixelsPerCell</ogc:Literal>
+                  <ogc:Literal>10</ogc:Literal>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>outputBBOX</ogc:Literal>
+                  <ogc:Function name="env">
+                    <ogc:Literal>wms_bbox</ogc:Literal>
+                  </ogc:Function>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>outputWidth</ogc:Literal>
+                  <ogc:Function name="env">
+                    <ogc:Literal>wms_width</ogc:Literal>
+                  </ogc:Function>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>outputHeight</ogc:Literal>
+                  <ogc:Function name="env">
+                    <ogc:Literal>wms_height</ogc:Literal>
+                  </ogc:Function>
+                </ogc:Function>
+              </ogc:Function>
+            </Transformation>
+           <Rule>
+             <RasterSymbolizer>
+             <!-- specify geometry attribute to pass validation -->
+               <Geometry>
+                 <ogc:PropertyName>the_geom</ogc:PropertyName></Geometry>
+               <!-- <Opacity>0.6</Opacity> -->
+               <ColorMap type="ramp" >
+                 <ColorMapEntry color="#FFFFFF" quantity="0" label="nodata"/>
+                 <ColorMapEntry color="#fee0d2" quantity="0.02" label="nodata"/>
+                 <!-- <ColorMapEntry color="#fcbba1" quantity="0.05" label="nodata"/> -->
+                 <ColorMapEntry color="#fc9272" quantity=".2" label="values" />
+                 <!-- <ColorMapEntry color="#fb6a4a" quantity=".4" label="values" /> -->
+                 <ColorMapEntry color="#ef3b2c" quantity=".6" label="nodata"/>
+                 <!-- <ColorMapEntry color="#cb181d" quantity=".8" label="values" /> -->
+                 <ColorMapEntry color="#67000d" quantity="1.0" label="values" />
+               </ColorMap>
+             </RasterSymbolizer>
+            </Rule>
+          </FeatureTypeStyle>
+        </UserStyle>
+      </NamedLayer>
+     </StyledLayerDescriptor>
+```
+
+Retournez dans la vue que vous avez créé via l'onglet couches. 
+Dans la rubrique Publication, cherchez `Configuration du WMS`, sélectionnez dans Style par défaut ; Heatmap (ou le nom de votre style).
+Sauvegardez et prévisualisez le résultat via l'onglet `Prévisualisation de la couche`.
