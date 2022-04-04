@@ -124,4 +124,15 @@ Each of these functions must be called with an existing id, and take as argument
 SELECT modify_images(id_images => 4, image => '''UniqueId''');
 ```
 
-The name of the attribute must be specified, followed by the characters *=>* to allow a specific attribute to take a particular value. Only the attributes that need to be changed must be entered (in this case the image attribute). The strings must be entered with triple quotes (''text'') for the functions to work properly. Note that geometries and matrices must be entered as char to be replaced
+The name of the attribute must be specified, followed by the characters *=>* to allow a specific attribute to take a particular value. Only the attributes that need to be changed must be entered (in this case the image attribute). The attributes to be changed have the same name as those in the table.
+
+The strings must be entered with triple quotes ('''text''') for the functions to work properly. Note that geometries and matrices must be entered as char to be replaced. When a geometry is to be changed, the epsg of the geometry must also be specified as in the following example:
+```
+SELECT modify_georefs(id_georefs => 4, user_georef => '''AMAAMA''', footprint => '''POLYGON((0 0,0 0,0 0,0 0,0 0))''',
+					 epsg => 2154);
+```
+Except for the externe table which has a SRID attribute:
+```
+SELECT modify_externe(id_externe => 4, quaternion => '''POINTZM(0 0 0 0)''', srid => 2154);
+```
+ 
