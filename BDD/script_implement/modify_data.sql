@@ -220,18 +220,18 @@ AS $$
 $$ LANGUAGE plpython3u;
 
 /*
-    Parameters for the externe function
+    Parameters for the modify_externe function
     ...
 
     Attributes
     ----------
     id_externe: int
         id of the table to modify
-    point: char 
+    point: char (WKT PointZ)
         center of the camera
-	quaternion: char
+	quaternion: char (WKT PointZM)
 		point use to create image_matrix
-	srid:
+	srid: int
 		SRID of the geometry
 	
     Methods
@@ -267,25 +267,27 @@ AS $$
 $$ LANGUAGE plpython3u;
 
 /*
-    Parameters for the interne function
+    Parameters for the modify_interne function
     ...
 
     Attributes
     ----------
     id_interne: int
         id of the table to modify
-    pp: char 
+    pp: char (PointZ)
         center of the camera
-	focal: char
+	focal: char (PointZ)
 		point use to create image_matrix
-	epsg:
+	epsg: int
 		SRID of the geometry
 	skew: float
 		skew of the image
+	distorsion: (array of integer)
+		distorsion matrix of the image
 	
     Methods
     -------
-    Replace data in the externe table
+    Replace data in the interne table
 */
 CREATE OR REPLACE FUNCTION modify_interne(id_interne int DEFAULT -1, pp char DEFAULT '', focal char DEFAULT '', epsg int DEFAULT 0, skew float DEFAULT -1,
 										 distorsion char DEFAULT '{}')
@@ -311,6 +313,81 @@ AS $$
 			plpy.execute('UPDATE interne SET skew = ' + str(skew))
 		if distorsion != '{}':
 			plpy.execute('UPDATE interne SET distorsion = ' + distorsion)
+		return 'All changes are done'
+	else :
+		return 'Id is not in the table'
+	return 'Nothing to change'
+$$ LANGUAGE plpython3u;
+
+/*
+    Parameters for the modify_sources function
+    ...
+
+    Attributes
+    ----------
+    id_sources: int
+        id of the table to modify
+    credit: char 
+        source of the image
+	home: char
+		homepage of the image source
+	url:
+		url of the image
+	viewer: float
+		viewer of the image
+	thumbnail: char
+	
+	lowres: char
+	
+	highres: char
+	
+	iip: char
+	
+	footprint: char
+		footprint of the batch of images
+	epsg: int
+		SRID of the geometry
+		
+    Methods
+    -------
+    Replace data in the sources table
+*/
+
+CREATE OR REPLACE FUNCTION modify_sources(id_sources int DEFAULT -1, credit char DEFAULT '', home char DEFAULT '', url char DEFAULT '', 
+										  viewer char DEFAULT '', thumbnail char DEFAULT '', lowres char DEFAULT '', highres char DEFAULT '',
+										  iip char DEFAULT '', footprint char DEFAULT '', epsg int DEFAULT 0)
+  RETURNS char
+AS $$
+
+	id_sources_tot = plpy.execute('SELECT id_sources FROM sources')
+	count_id = plpy.execute('SELECT COUNT(id_sources) AS tot FROM sources')
+	
+	plpy.notice(id_sources_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_sources_tot[i]['id_sources']))
+		
+	if id_sources > -1  and str(id_sources) in tab:
+		if credit != '':
+			plpy.execute('UPDATE sources SET credit = ' + credit)
+		if home != '':
+			plpy.execute('UPDATE sources SET home = ' + home)
+		if url != '':
+			plpy.execute('UPDATE sources SET url = ' + url)
+		if viewer != '':
+			plpy.execute('UPDATE sources SET viewer = ' + credit)
+		if thumbnail != '':
+			plpy.execute('UPDATE sources SET thumbnail = ' + thumbnail)
+		if lowres != '':
+			plpy.execute('UPDATE sources SET lowres = ' + lowres)
+		if highres != '':
+			plpy.execute('UPDATE sources SET highres = ' + highres)
+		if iip != '':
+			plpy.execute('UPDATE sources SET iip = ' + iip)
+		if footprint != '' and epsg != 0:
+			plpy.execute('UPDATE sources SET footprint = ST_GeomFromText(' + footprint + ', ' + str(epsg) + ')')
 		return 'All changes are done'
 	else :
 		return 'Id is not in the table'

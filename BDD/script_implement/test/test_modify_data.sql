@@ -48,5 +48,15 @@ SELECT modify_externe(id_externe => 4, quaternion => '''POINTZM(0 0 0 0)''', sri
 -- Test 6
 
 SELECT modify_interne(id_interne => 0), modify_interne(id_interne => 4);
-SELECT modify_interne(id_interne => 4, skew => 1.4, distorsion => '''{2, 2}''')
+SELECT modify_interne(id_interne => 4, skew => 1.4, distorsion => '''{2, 2}''');
+
+-- Test 7
+
+SELECT modify_sources(id_sources => 0), modify_sources(id_sources => 4);
+SELECT modify_sources(id_sources => 4, credit => '''TestByAma''', url => '''UneURL''')
+
+
+
+
+
 
