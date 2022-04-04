@@ -1,4 +1,4 @@
-name: CI for test the build and remove function
+name: CI for test the build and functionS
 on:
   push:
     branches:

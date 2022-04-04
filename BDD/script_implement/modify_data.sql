@@ -15,13 +15,13 @@ CREATE EXTENSION IF NOT EXISTS plpython3u;
 		date of georefencing creation
 	georef_principal: bool
 		this is the principal georeferencing of an image or not
-	footprint: geometry
+	footprint: char (WKT Polygon)
 		footprint of the image referenced by the georeferencing
 	epsg: int
 		SRID of the geometry
-	near: geometry
+	near: char (WKT Polygon)
 		nearest polygon to the camera
-	far: geometry
+	far: char (WKT Polygon)
 		fathest polygon to the camera
 	id_transfo2d: int
 		id of the associated transfo_2d table
@@ -79,9 +79,9 @@ $$ LANGUAGE plpython3u;
     ----------
     id_points_appuis: int
         id of the table to modify
-    point2d: geom (char)
+    point2d: char (WKT Point)
         2D support points of an image
-	point3d: geom (char)
+	point3d: char (WKT PointZ)
 		3D support points of an image
 	epsg: int
 		SRID of the geometry
@@ -135,7 +135,7 @@ $$ LANGUAGE plpython3u;
 		end date of the image
 	image: char
 		unique id of an image
-	size_image: geom (point)
+	size_image: char (WKT Point)
 		size of the image
 	id_sources:
 		id of the associated sources table
@@ -188,7 +188,7 @@ $$ LANGUAGE plpython3u;
     ----------
     id_transfo2d: int
         id of the table to modify
-    image_matrix: array
+    image_matrix: char (array of integer)
         image transformation matrix
 	
     Methods
@@ -196,6 +196,45 @@ $$ LANGUAGE plpython3u;
     Replace data in the transfo2d table
 */
 CREATE OR REPLACE FUNCTION modify_transfo2d(id_transfo2d int DEFAULT -1, image_matrix char DEFAULT '{}')
+  RETURNS char
+AS $$
+
+	id_transfo2d_tot = plpy.execute('SELECT id_transfo2d FROM transfo2d')
+	count_id = plpy.execute('SELECT COUNT(id_transfo2d) AS tot FROM transfo2d')
+	
+	plpy.notice(id_transfo2d_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_transfo2d_tot[i]['id_transfo2d']))
+		
+	if id_transfo2d > -1  and str(id_transfo2d) in tab:
+		if image_matrix != '{}':
+			plpy.execute('UPDATE transfo2d SET image_matrix = ' + image_matrix)
+		return 'All changes are done'
+	else :
+		return 'Id is not in the table'
+	return 'Nothing to change'
+$$ LANGUAGE plpython3u;
+
+/*
+    Parameters for the externe function
+    ...
+
+    Attributes
+    ----------
+    id_externe: int
+        id of the table to modify
+    point: char 
+        center of the camera
+	quaternion: char
+	
+    Methods
+    -------
+    Replace data in the transfo2d table
+*/
+CREATE OR REPLACE FUNCTION modify_externe(id_transfo2d int DEFAULT -1, image_matrix char DEFAULT '{}')
   RETURNS char
 AS $$
 

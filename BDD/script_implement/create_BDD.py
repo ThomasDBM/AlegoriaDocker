@@ -74,7 +74,7 @@ create_externe_table = """
 CREATE TABLE IF NOT EXISTS externe(
     id_externe SERIAL PRIMARY KEY,
     point geometry(PointZ, 0) NOT NULL,
-    quaternion geometry(PointZ, 0) NOT NULL,
+    quaternion geometry(PointZM, 0) NOT NULL,
     SRID INT NOT NULL
 );
 """
