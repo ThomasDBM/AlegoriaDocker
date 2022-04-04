@@ -265,3 +265,54 @@ AS $$
 		return 'Id is not in the table'
 	return 'Nothing to change'
 $$ LANGUAGE plpython3u;
+
+/*
+    Parameters for the interne function
+    ...
+
+    Attributes
+    ----------
+    id_interne: int
+        id of the table to modify
+    pp: char 
+        center of the camera
+	focal: char
+		point use to create image_matrix
+	epsg:
+		SRID of the geometry
+	skew: float
+		skew of the image
+	
+    Methods
+    -------
+    Replace data in the externe table
+*/
+CREATE OR REPLACE FUNCTION modify_interne(id_interne int DEFAULT -1, pp char DEFAULT '', focal char DEFAULT '', epsg int DEFAULT 0, skew float DEFAULT -1,
+										 distorsion char DEFAULT '{}')
+  RETURNS char
+AS $$
+
+	id_interne_tot = plpy.execute('SELECT id_interne FROM interne')
+	count_id = plpy.execute('SELECT COUNT(id_interne) AS tot FROM interne')
+	
+	plpy.notice(id_interne_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_interne_tot[i]['id_interne']))
+		
+	if id_interne > -1  and str(id_interne) in tab:
+		if pp != '' and epsg != 0:
+			plpy.execute('UPDATE interne SET pp = ST_GeomFromText(' + pp + ', ' + str(epsg) + ')')
+		if focal != '' and epsg != 0:
+			plpy.execute('UPDATE interne SET focal = ST_GeomFromText(' + focal + ', ' + str(epsg) + ')')
+		if skew != -1:
+			plpy.execute('UPDATE interne SET skew = ' + str(skew))
+		if distorsion != '{}':
+			plpy.execute('UPDATE interne SET distorsion = ' + distorsion)
+		return 'All changes are done'
+	else :
+		return 'Id is not in the table'
+	return 'Nothing to change'
+$$ LANGUAGE plpython3u;
