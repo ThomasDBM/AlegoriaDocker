@@ -393,3 +393,42 @@ AS $$
 		return 'Id is not in the table'
 	return 'Nothing to change'
 $$ LANGUAGE plpython3u;
+
+/*
+    Parameters for the modify_masks function
+    ...
+
+    Attributes
+    ----------
+    id_masks: int
+        id of the table to modify
+    url: char 
+        source of the masks
+		
+    Methods
+    -------
+    Replace data in the masks table
+*/
+
+CREATE OR REPLACE FUNCTION modify_masks(id_masks int DEFAULT -1, url char DEFAULT '')
+  RETURNS char
+AS $$
+
+	id_masks_tot = plpy.execute('SELECT id_masks FROM masks')
+	count_id = plpy.execute('SELECT COUNT(id_masks) AS tot FROM masks')
+	
+	plpy.notice(id_masks_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_masks_tot[i]['id_masks']))
+		
+	if id_masks > -1  and str(id_masks) in tab:
+		if url != '':
+			plpy.execute('UPDATE masks SET url = ' + url)
+		return 'All changes are done'
+	else :
+		return 'Id is not in the table'
+	return 'Nothing to change'
+$$ LANGUAGE plpython3u;
