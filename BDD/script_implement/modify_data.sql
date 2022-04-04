@@ -54,7 +54,6 @@ AS $$
 		tab.append(str(id_georefs_tot[i]['id_georefs']))
 	
 	if id_georefs > -1 and str(id_georefs) in tab:
-		return 'pouet'
 		if user_georef != '':
 			plpy.execute('UPDATE georefs SET user_georef = ' + user_georef)
 		if date != '':
@@ -89,8 +88,9 @@ $$ LANGUAGE plpython3u;
 	
     Methods
     -------
-    Replace data in the georefs table
+    Replace data in the points_appuis table
 */
+
 CREATE OR REPLACE FUNCTION modify_points_appuis(id_points_appuis int DEFAULT -1, point2d char DEFAULT '', point3d char DEFAULT '', epsg int DEFAULT 0)
   RETURNS char
 AS $$
@@ -122,7 +122,7 @@ AS $$
 $$ LANGUAGE plpython3u;
 
 /*
-    Parameters for the modify_points_appuis function
+    Parameters for the modify_images function
     ...
 
     Attributes
@@ -143,8 +143,9 @@ $$ LANGUAGE plpython3u;
 		id of the associated masks table
     Methods
     -------
-    Replace data in the georefs table
+    Replace data in the images table
 */
+
 CREATE OR REPLACE FUNCTION modify_images(id_images int DEFAULT -1, t0 char DEFAULT '', t1 char DEFAULT '', image char DEFAULT '',
 										 size_image char DEFAULT '', id_sources int DEFAULT -1, id_masks int DEFAULT -1)
   RETURNS char
@@ -179,3 +180,40 @@ AS $$
 	return 'Nothing to change'
 $$ LANGUAGE plpython3u;
 
+/*
+    Parameters for the modify_transfo2d function
+    ...
+
+    Attributes
+    ----------
+    id_transfo2d: int
+        id of the table to modify
+    image_matrix: array
+        image transformation matrix
+	
+    Methods
+    -------
+    Replace data in the transfo2d table
+*/
+CREATE OR REPLACE FUNCTION modify_transfo2d(id_transfo2d int DEFAULT -1, image_matrix char DEFAULT '{}')
+  RETURNS char
+AS $$
+
+	id_transfo2d_tot = plpy.execute('SELECT id_transfo2d FROM transfo2d')
+	count_id = plpy.execute('SELECT COUNT(id_transfo2d) AS tot FROM transfo2d')
+	
+	plpy.notice(id_transfo2d_tot.__str__())
+	plpy.notice(count_id.__str__())
+	
+	tab = []
+	for i in range(0, count_id[0]['tot'], 1):
+		tab.append(str(id_transfo2d_tot[i]['id_transfo2d']))
+		
+	if id_transfo2d > -1  and str(id_transfo2d) in tab:
+		if image_matrix != '{}':
+			plpy.execute('UPDATE transfo2d SET image_matrix = ' + image_matrix)
+		return 'All changes are done'
+	else :
+		return 'Id is not in the table'
+	return 'Nothing to change'
+$$ LANGUAGE plpython3u;
