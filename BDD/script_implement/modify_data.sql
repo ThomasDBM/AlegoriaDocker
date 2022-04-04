@@ -195,6 +195,7 @@ $$ LANGUAGE plpython3u;
     -------
     Replace data in the transfo2d table
 */
+
 CREATE OR REPLACE FUNCTION modify_transfo2d(id_transfo2d int DEFAULT -1, image_matrix char DEFAULT '{}')
   RETURNS char
 AS $$
@@ -229,28 +230,36 @@ $$ LANGUAGE plpython3u;
     point: char 
         center of the camera
 	quaternion: char
+		point use to create image_matrix
+	srid:
+		SRID of the geometry
 	
     Methods
     -------
-    Replace data in the transfo2d table
+    Replace data in the externe table
 */
-CREATE OR REPLACE FUNCTION modify_externe(id_transfo2d int DEFAULT -1, image_matrix char DEFAULT '{}')
+
+CREATE OR REPLACE FUNCTION modify_externe(id_externe int DEFAULT -1, point char DEFAULT '', quaternion char DEFAULT '', srid int DEFAULT 0)
   RETURNS char
 AS $$
 
-	id_transfo2d_tot = plpy.execute('SELECT id_transfo2d FROM transfo2d')
-	count_id = plpy.execute('SELECT COUNT(id_transfo2d) AS tot FROM transfo2d')
+	id_externe_tot = plpy.execute('SELECT id_externe FROM externe')
+	count_id = plpy.execute('SELECT COUNT(id_externe) AS tot FROM externe')
 	
-	plpy.notice(id_transfo2d_tot.__str__())
+	plpy.notice(id_externe_tot.__str__())
 	plpy.notice(count_id.__str__())
 	
 	tab = []
 	for i in range(0, count_id[0]['tot'], 1):
-		tab.append(str(id_transfo2d_tot[i]['id_transfo2d']))
+		tab.append(str(id_externe_tot[i]['id_externe']))
 		
-	if id_transfo2d > -1  and str(id_transfo2d) in tab:
-		if image_matrix != '{}':
-			plpy.execute('UPDATE transfo2d SET image_matrix = ' + image_matrix)
+	if id_externe > -1  and str(id_externe) in tab:
+		if point != '' and srid != 0:
+			plpy.execute('UPDATE externe SET point = ST_GeomFromText(' + point + ', ' + str(srid) + ')')
+		if quaternion != '' and srid != 0:
+			plpy.execute('UPDATE externe SET quaternion = ST_GeomFromText(' + quaternion + ', ' + str(srid) + ')')
+		if srid != 0:
+			plpy.execute('UPDATE externe SET srid = ' + str(srid))
 		return 'All changes are done'
 	else :
 		return 'Id is not in the table'
