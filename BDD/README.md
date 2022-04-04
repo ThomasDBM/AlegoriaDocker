@@ -97,4 +97,14 @@ On this example, we are looking to remove the first image (id = 1) from the imag
 
 ### Remove a batch of data
 
+The remove_batch_data file contains a function integrated to the database allowing to remove a batch of data. This deletion is done only from the source table. The arguments entered are the same as for the remove_data function, in particular to ensure that the administrator really wants to remove a batch of data using the source table.
+
+An example of a call to the remove_batch_data function is the following:
+
+```
+SELECT remove_batch_data('sources', 1);
+```
+
+In this example, we want to remove the first source of the database (id = 1) from the source table. The function will also remove the dependencies affected by the deletion of the source. That is, the associated images, the georeferencing with the associated internal/external and transfo2d tables.
+
 ### Modify a data
