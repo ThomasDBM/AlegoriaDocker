@@ -82,3 +82,19 @@ psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
 ```
 
 ## Maintenance ##
+
+### Remove a data
+
+The remove_data file contains a function integrated to the database allowing to remove a data in any table, except the source table which corresponds to the deletion by batch of data. The function has two arguments : first the table where the data should be deleted, second the index of the data.
+
+An example of a call to the remove_data function is the following:
+
+```
+SELECT remove_data('images', 0);
+```
+
+On this example, we are looking to remove the first image (id = 1) from the images table. The function will also remove the dependencies affected by the deletion of the data (e.g. to remove an image, you must first remove its georeferencing).
+
+### Remove a batch of data
+
+### Modify a data
