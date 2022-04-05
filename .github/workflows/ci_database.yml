@@ -1,9 +1,8 @@
-name: CI for test the build and remove function
+name: CI for test the build and functionS
 on:
   push:
     branches:
-      - Vignaud/script_remove_data
-      - Vignaud/remove_batch_data
+      - Vignaud/modify_a_data
   pull_request:
     branches:
       - main
@@ -32,12 +31,10 @@ jobs:
         run: pip install psycopg2-binary
       - name : Fill database
         run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432
-      - name : Remove a data
-        run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432 points_appuis 0
       - name : Do all tests
         run : python3 BDD/script_implement/test/test_create_BDD.py
   
-  # BUIL DATABASE AND TESTS ON FUNCTIONS
+  # BUILD DATABASE AND TESTS ON FUNCTIONS
   functions_testing:
     runs-on: ubuntu-20.04
     steps:
@@ -81,6 +78,10 @@ jobs:
         run : psql test -h localhost -d test -f BDD/script_implement/remove_batch_data.sql
         env:
           PGPASSWORD: test
+      - name : Instance the modify data functions
+        run : psql test -h localhost -d test -f BDD/script_implement/modify_data.sql
+        env:
+          PGPASSWORD: test
 
       # INSTALL PIP AND LIBRARY
       - name : Install pip
@@ -97,5 +98,9 @@ jobs:
           PGPASSWORD: test
       - name : Do all tests for the remove_batch_data function
         run : psql test -h localhost -d test -f BDD/script_implement/test/test_remove_batch_data.sql
+        env:
+          PGPASSWORD: test
+      - name : Do all tests for the modify data functions
+        run : psql test -h localhost -d test -f BDD/script_implement/test/test_modify_data.sql
         env:
           PGPASSWORD: test
