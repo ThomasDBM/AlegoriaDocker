@@ -52,22 +52,27 @@ AS $$
 				supp_int = []
 				supp_ext = []
 				supp_transfo2d = []
-				for i in range(0, count_id_georefs[0]['tot'], 1):
-					id_interne = plpy.execute('SELECT id_interne FROM georefs WHERE id_georefs = ' + str(id_georefs[i]['id_georefs']))
-					id_externe = plpy.execute('SELECT id_externe FROM georefs WHERE id_georefs = ' + str(id_georefs[i]['id_georefs']))
-					id_transfo2d = plpy.execute('SELECT id_transfo2d FROM georefs WHERE id_georefs = ' + str(id_georefs[i]['id_georefs']))
-					return id_interne
+				
+				for j in range(0, count_id_georefs[0]['tot'], 1):
+					id_interne = plpy.execute('SELECT id_interne FROM georefs WHERE id_georefs = ' + str(id_georefs[j]['id_georefs']))
+					id_externe = plpy.execute('SELECT id_externe FROM georefs WHERE id_georefs = ' + str(id_georefs[j]['id_georefs']))
+					id_transfo2d = plpy.execute('SELECT id_transfo2d FROM georefs WHERE id_georefs = ' + str(id_georefs[j]['id_georefs']))
 					if id_interne[0]['id_interne'] not in supp_int:
 						supp_int.append(id_interne[0]['id_interne'])
 					if id_externe[0]['id_externe'] not in supp_ext:
 						supp_ext.append(id_externe[0]['id_externe'])
 					if id_transfo2d[0]['id_transfo2d'] not in supp_transfo2d:
 						supp_ext.append(id_transfo2d[0]['id_transfo2d'])	
-				--plpy.execute('DELETE FROM interne WHERE id_interne = ' + str(id_interne[0]['id_interne']))
-				--plpy.execute('DELETE FROM externe WHERE id_externe = ' + str(id_externe[0]['id_externe']))
-				--plpy.execute('DELETE FROM transfo2d WHERE id_transfo2d = ' + str(id_transfo2d[0]['id_transfo2d']))
+				
 				plpy.execute('DELETE FROM georefs WHERE id_images = ' + str(id_images[i]['id_images']))
 				plpy.execute('DELETE FROM images WHERE id_images = ' + str(id_images[i]['id_images']))
+				
+				for id_found in supp_int:
+					plpy.execute('DELETE FROM interne WHERE id_interne = ' + str(id_found))
+				for id_found in supp_ext:
+					plpy.execute('DELETE FROM externe WHERE id_externe = ' + str(id_found))
+				for id_transfo2d in supp_int:
+					plpy.execute('DELETE FROM transfo2d WHERE id_transfo2d = ' + str(id_found))
 				
 			plpy.execute('DELETE FROM ' + tablename + ' WHERE id_'+ tablename + ' = ' + str(id))
 			return 'The source table has been deleted, along with the associated data set'
