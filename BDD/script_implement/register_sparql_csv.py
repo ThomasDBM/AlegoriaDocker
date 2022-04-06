@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
@@ -43,6 +44,8 @@ df.rename(columns={'photo': 'url',
                     'toponyme': 'ville',
                     'insee': 'insee',
                     'wkt': 'footprint'}, inplace=True)
+
+df = df.dropna()
 print(df)
 
 # Database connection block
@@ -61,14 +64,39 @@ try:
 
     # Database pointer
     cursor = connection.cursor()
+    cursor.execute("SELECT id_images FROM images")
+    id_images = cursor.fetchall()
 
+    ids = []
+    for id in id_images:
+        ids.append(id[0])
+    i = 0
+
+    cursor.execute("SELECT image FROM images")
+    images = cursor.fetchall()
+    images_exists = []
+    for image in images:
+        images_exists.append(image[0])
+    print(images_exists)
+    verif_images = []
     # Execution of each SQL query
-    #cursor.execute(create_masks_table)
+    for index, row in df.iterrows():
+        if row['image'] not in verif_images and row['image'] not in images_exists:
+            if i not in ids:
+                cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), 4, null);")
+                i+=1
+                verif_images.append(row['image'])
+            else:
+                while i in ids:
+                    i+=1
+                cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), 4, null);")
+                i+=1
+                verif_images.append(row['image'])
 
     # Commit all requests
-    #connection.commit()
+    connection.commit()
 
-    #print("The database has been modified according to the queries made.")
+    print("The database has been modified according to the queries made.")
 
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
