@@ -35,8 +35,15 @@ port     = sys.argv[5] if len(sys.argv) > 5 else None
 csv      = sys.argv[6] if len(sys.argv) > 6 else None
 debug = False
 
-dataframe = pd.read_csv(csv, sep=',')
-print(dataframe)
+df = pd.read_csv(csv, sep = ',')
+
+df.rename(columns={'photo': 'url', 
+                    'nomFichierImg': 'image',
+                    'titre': 'tirage',
+                    'toponyme': 'ville',
+                    'insee': 'insee',
+                    'wkt': 'footprint'}, inplace=True)
+print(df)
 
 # Database connection block
 try:
