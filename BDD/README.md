@@ -64,6 +64,7 @@ python3 --version
 sudo apt-get install python3-pip 
 pip install psycopg2-binary
 pip install pyquaternion
+pip install pandas
 ```
 
 Finally, we can complete our database with the following commands :
