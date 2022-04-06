@@ -1,8 +1,8 @@
-name: CI for test the build and functionS
+name: CI for test the build and functions
 on:
   push:
     branches:
-      - Vignaud/verify_scripts
+      - Vignaud/register_csv
   pull_request:
     branches:
       - main
