@@ -35,6 +35,9 @@ port     = sys.argv[5] if len(sys.argv) > 5 else None
 csv      = sys.argv[6] if len(sys.argv) > 6 else None
 debug = False
 
+dataframe = pd.read_csv("/home/amaryllis/SERVEUR/alegoria/archives_nationales/LapieImagesEtLocalisations.csv")
+print(dataframe)
+
 # Database connection block
 try:
 
