@@ -2,7 +2,7 @@ name: CI for test the build and functionS
 on:
   push:
     branches:
-      - Vignaud/modify_a_data
+      - Vignaud/verify_scripts
   pull_request:
     branches:
       - main

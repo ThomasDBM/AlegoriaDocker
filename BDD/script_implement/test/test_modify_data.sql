@@ -57,7 +57,7 @@ SELECT modify_sources(id_sources => 4, credit => '''TestByAma''', url => '''UneU
 
 -- Test 8 : tests on the modify_masks function
 
-SELECT modify_masks(id_masks => 0), modify_masks(id_masks => 4, url => '''UneURLAuHasard''');
+SELECT modify_masks(id_masks => 0), modify_masks(id_masks => 4, url => '''UneURLAuHasardTESTS''');
 
 
 
