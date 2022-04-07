@@ -64,6 +64,26 @@ try:
 
     # Database pointer
     cursor = connection.cursor()
+
+    # Select all id_sources in database to avoid duplicate id
+    cursor.execute("SELECT id_sources FROM sources")
+    id_sources = cursor.fetchall()
+
+    ids = []
+    for id in id_sources:
+        ids.append(id[0])
+    i = 0
+
+    sources = []
+    credit = []
+    for index, row in df.iterrows():
+        #print(row['url'].split('/'))
+        credit_url = (row['url'].split('/'))[4]
+        if credit_url not in credit:
+            credit.append(credit_url)
+            print(credit)
+
+    # Select all id_images in database to avoid duplicate id
     cursor.execute("SELECT id_images FROM images")
     id_images = cursor.fetchall()
 
@@ -72,13 +92,16 @@ try:
         ids.append(id[0])
     i = 0
 
+    # Select all image in database to avoid duplicate image due to unique constraint
     cursor.execute("SELECT image FROM images")
     images = cursor.fetchall()
+
     images_exists = []
     for image in images:
         images_exists.append(image[0])
     print(images_exists)
     verif_images = []
+
     # Execution of each SQL query
     for index, row in df.iterrows():
         if row['image'] not in verif_images and row['image'] not in images_exists:
@@ -94,7 +117,7 @@ try:
                 verif_images.append(row['image'])
 
     # Commit all requests
-    connection.commit()
+    #connection.commit()
 
     print("The database has been modified according to the queries made.")
 
