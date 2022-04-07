@@ -52,7 +52,7 @@ def insertToImages(files, balisesImages):
     """
 
     try:
-        Element = []
+        element = []
         for file in files :
             tree = ET.parse(file)
             root = tree.getroot()
