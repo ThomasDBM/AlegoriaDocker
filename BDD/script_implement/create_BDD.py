@@ -47,8 +47,8 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE TABLE IF NOT EXISTS sources(
     id_sources SERIAL PRIMARY KEY,
     credit VARCHAR NOT NULL,
-    home VARCHAR,
-    url VARCHAR NOT NULL,
+    home VARCHAR NOT NULL,
+    url VARCHAR,
     viewer VARCHAR,
     thumbnail VARCHAR,
     lowres VARCHAR,
