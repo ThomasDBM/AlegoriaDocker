@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS interne(
     id_interne SERIAL PRIMARY KEY,
     pp geometry(PointZ,0) NOT NULL,
     focal geometry(PointZ,0) NOT NULL,
-    skew FLOAT NOT NULL,
+    skew FLOAT,
     distorsion integer ARRAY
 );
 """
