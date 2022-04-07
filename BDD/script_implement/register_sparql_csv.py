@@ -69,19 +69,48 @@ try:
     cursor.execute("SELECT id_sources FROM sources")
     id_sources = cursor.fetchall()
 
-    ids = []
+    ids_sources = []
     for id in id_sources:
-        ids.append(id[0])
+        ids_sources.append(id[0])
     i = 0
 
-    sources = []
-    credit = []
+    # Select all homepage in database to avoid duplicate image due to unique constraint
+    cursor.execute("SELECT home FROM sources")
+    sources = cursor.fetchall()
+
+    sources_exists = []
+    for homepage in sources:
+        sources_exists.append(homepage[0])
+
+    cursor.execute("SELECT credit FROM sources")
+    s_credit = cursor.fetchall()
+
+    credits_exists = []
+    for credit in s_credit:
+        credits_exists.append(credit[0])
+
+    verif_sources = []
+    verif_credits = []
     for index, row in df.iterrows():
-        #print(row['url'].split('/'))
-        credit_url = (row['url'].split('/'))[4]
-        if credit_url not in credit:
-            credit.append(credit_url)
-            print(credit)
+        homepage = (row['url'].split('/id'))[0]
+        #credit = (row['url'].split('/'))[4]
+        #print(verif_credits, credits_exists)
+        #if (homepage not in sources_exists and homepage not in verif_sources) and (credit not in credits_exists and credit not in verif_credits):
+        if (homepage not in sources_exists and homepage not in verif_sources):
+            if i not in ids_sources:
+                cursor.execute("INSERT INTO sources(id_sources, credit, home, url, viewer, thumbnail, lowres, highres, iip, footprint) VALUES ("+str(i)+", '"+(row['url'].split('/'))[4]+"', '"+homepage+"', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', ST_GeomFromText('MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))', 2154))")
+                connection.commit()
+                i+=1
+                verif_sources.append(homepage)
+            else:
+                while i in ids_sources:
+                    i+=1
+                cursor.execute("INSERT INTO sources(id_sources, credit, home, url, viewer, thumbnail, lowres, highres, iip, footprint) VALUES ("+str(i)+", '"+(row['url'].split('/'))[4]+"', '"+homepage+"', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', ST_GeomFromText('MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))', 2154))")
+                connection.commit()
+                i+=1
+                verif_sources.append(homepage)
+
+    print("Sources succefully added.")
 
     # Select all id_images in database to avoid duplicate id
     cursor.execute("SELECT id_images FROM images")
@@ -99,27 +128,31 @@ try:
     images_exists = []
     for image in images:
         images_exists.append(image[0])
-    print(images_exists)
+    #print(images_exists)
     verif_images = []
 
-    # Execution of each SQL query
+    # Execution of SQL queries to add an image
+    # Request the sources of the image to add the right id_sources
     for index, row in df.iterrows():
+        homepage = (row['url'].split('/id'))[0]
+        cursor.execute("SELECT id_sources FROM sources WHERE home='"+homepage+"'")
+        id_of_sources = cursor.fetchall()
         if row['image'] not in verif_images and row['image'] not in images_exists:
             if i not in ids:
-                cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), 4, null);")
+                cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), "+str(id_of_sources[0][0])+", null);")
                 i+=1
                 verif_images.append(row['image'])
             else:
                 while i in ids:
                     i+=1
-                cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), 4, null);")
+                cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), 0, null);")
                 i+=1
                 verif_images.append(row['image'])
 
     # Commit all requests
-    #connection.commit()
+    connection.commit()
 
-    print("The database has been modified according to the queries made.")
+    print("Images succefully added to images table.")
 
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
