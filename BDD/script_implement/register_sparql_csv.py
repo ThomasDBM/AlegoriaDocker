@@ -154,6 +154,35 @@ try:
 
     print("Images succefully added to images table.")
 
+    # Select all id_externe/interne/transfo2d in database to avoid duplicate id
+
+    cursor.execute("SELECT id_interne FROM interne")
+    id_interne = cursor.fetchall()
+    cursor.execute("SELECT id_externe FROM externe")
+    id_externe = cursor.fetchall()
+    cursor.execute("SELECT id_transfo2d FROM transfo2d")
+    id_transfo2d = cursor.fetchall()
+    cursor.execute("SELECT id_georefs FROM georefs")
+    id_georefs = cursor.fetchall()
+
+    ids_interne = []
+    for id in id_interne:
+        ids_interne.append(id[0])
+    k = 0
+    ids_externe = []
+    for id in id_externe:
+        ids_externe.append(id[0])
+    l = 0
+    ids_transfo2d= []
+    for id in id_transfo2d:
+        ids_transfo2d.append(id[0])
+    m = 0
+    ids_georefs = []
+    for id in id_georefs:
+        ids_georefs.append(id[0])
+
+    print("Georeferencement succefully added.")
+
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
 
