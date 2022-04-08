@@ -180,6 +180,27 @@ try:
     ids_georefs = []
     for id in id_georefs:
         ids_georefs.append(id[0])
+    n = 0
+
+    for index, row in df.iterrows():
+        if n not in ids_georefs:
+            if k not in ids_interne and l not in ids_externe and m not in ids_transfo2d:
+                print(k,l,m)
+                k+=1
+                l+=1
+                m+=1
+            else:
+                while k in ids_interne:
+                    k+=1
+                while l in ids_externe:
+                    l+=1
+                while m in ids_transfo2d:
+                    m+=1
+                print(k,l,m)
+                k+=1
+                l+=1
+                m+=1
+
 
     print("Georeferencement succefully added.")
 
