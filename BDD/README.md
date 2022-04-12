@@ -38,6 +38,7 @@ After the previous steps, we have successfully installed PostgreSQL and its clie
 
 ```
 sudo -u postgres psql
+postgres=# ALTER USER postgres WITH PASSWORD 'postgres'
 postgres=# CREATE DATABASE alegoria;
 postgres=# GRANT ALL PRIVILEGES ON DATABASE alegoria to postgres;
 postgres=# \q
