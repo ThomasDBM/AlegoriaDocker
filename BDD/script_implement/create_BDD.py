@@ -63,7 +63,7 @@ create_interne_table = """
 CREATE TABLE IF NOT EXISTS interne(
     id_interne SERIAL PRIMARY KEY,
     pp geometry(PointZ,0) NOT NULL,
-    focal geometry(PointZ,0) NOT NULL,
+    focal FLOAT NOT NULL,
     skew FLOAT,
     distorsion integer ARRAY
 );
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS georefs(
     user_georef VARCHAR NOT NULL,
     date timestamp NOT NULL,
     georef_principal BOOL NOT NULL,
-    footprint geometry(Polygon, 0) NOT NULL,
+    footprint geometry(MULTIPOLYGON, 0) NOT NULL,
     near geometry(POLYGON, 0) NOT NULL,
     far geometry(POLYGON, 0) NOT NULL,
     id_transfo2D INT NOT NULL,
