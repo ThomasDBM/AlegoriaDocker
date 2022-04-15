@@ -45,7 +45,7 @@ class TestCreateMethods(unittest.TestCase):
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
                             AND f_table_name = 'interne' \
-                            AND f_geometry_column = 'focal'")
+                            AND f_geometry_column = 'pp'")
 
             # Retrieve the result
             type_focal = cursor.fetchall()
