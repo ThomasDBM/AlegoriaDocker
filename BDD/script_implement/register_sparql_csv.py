@@ -38,6 +38,7 @@ debug = False
 
 df = pd.read_csv(csv, sep = ',')
 
+print(df.shape)
 df.rename(columns={'photo': 'url', 
                     'nomFichierImg': 'image',
                     'titre': 'tirage',
@@ -48,7 +49,7 @@ df.rename(columns={'photo': 'url',
 df = df.dropna()
 print(df)
 
-if 'image' in df:
+if 'id_image' in df:
     print("La colonne existe déjà")
 else:
     df = df.assign(id_image=0)
@@ -165,6 +166,8 @@ try:
 
     df.to_csv(csv, sep = ',')
 
+    print(df.shape)
+
     print("Images succefully added to images table.")
 
     # Select all id_externe/interne/transfo2d in database to avoid duplicate id
@@ -275,8 +278,10 @@ try:
                         INNER JOIN sources ON sources.id_sources = images.id_sources \
                         WHERE images.id_sources = "+str(source)+";")
         geom = cursor.fetchall()
-        cursor.execute("UPDATE sources SET footprint = ST_GeomFromText('"+geom[0][0]+"', 2154) WHERE images.id_sources = "+str(source)+";")
+        cursor.execute("UPDATE sources SET footprint = ST_GeomFromText('"+geom[0][0]+"', 2154) WHERE id_sources = "+str(source)+";")
         connection.commit()
+
+    print(df.shape)
     
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
