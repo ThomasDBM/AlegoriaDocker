@@ -97,6 +97,7 @@ try:
         credits_exists.append(credit[0])
 
     verif_sources = []
+    ids_sources = []
     verif_credits = []
     for index, row in df.iterrows():
         homepage = (row['url'].split('/id'))[0]
@@ -107,6 +108,7 @@ try:
             if i not in ids_sources:
                 cursor.execute("INSERT INTO sources(id_sources, credit, home, url, viewer, thumbnail, lowres, highres, iip, footprint) VALUES ("+str(i)+", '"+(row['url'].split('/'))[4]+"', '"+homepage+"', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', ST_GeomFromText('MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))', 2154))")
                 connection.commit()
+                ids_sources.append(i)
                 i+=1
                 verif_sources.append(homepage)
             else:
@@ -114,6 +116,7 @@ try:
                     i+=1
                 cursor.execute("INSERT INTO sources(id_sources, credit, home, url, viewer, thumbnail, lowres, highres, iip, footprint) VALUES ("+str(i)+", '"+(row['url'].split('/'))[4]+"', '"+homepage+"', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', 'mi4', ST_GeomFromText('MULTIPOLYGON(((1 1,5 1,5 5,1 5,1 1),(2 2,2 3,3 3,3 2,2 2)),((6 3,9 2,9 4,6 3)))', 2154))")
                 connection.commit()
+                ids_sources.append(i)
                 i+=1
                 verif_sources.append(homepage)
 
@@ -258,20 +261,22 @@ try:
                 k+=1
                 l+=1
                 m+=1
-        else:
-            #print("Un géoréférencement existe déjà pour l'image")
+        #else:
+         #   print("Un géoréférencement existe déjà pour l'image")
+    
     print("Georeferencement succefully added.")
-    """
+    
     ## Add right geom to sources
-    cursor.execute("SELECT ST_UNION(georefs.footprint) \
-                    FROM georefs \
-                    INNER JOIN images ON georefs.id_images = images.id_images \
-                    INNER JOIN sources ON sources.id_sources = images.id_sources \
-                    WHERE images.id_sources = 0")
-    geom = cursor.fetchall()
-    cursor.execute("UPDATE sources SET footprint ="+geom[0][0]+";")
-    connection.commit()
-    print(geom)"""
+    for source in ids_sources:
+        print(source)
+        cursor.execute("SELECT ST_AsText(ST_UNION(georefs.footprint)) \
+                        FROM georefs \
+                        INNER JOIN images ON georefs.id_images = images.id_images \
+                        INNER JOIN sources ON sources.id_sources = images.id_sources \
+                        WHERE images.id_sources = "+str(source)+";")
+        geom = cursor.fetchall()
+        cursor.execute("UPDATE sources SET footprint = ST_GeomFromText('"+geom[0][0]+"', 2154) WHERE images.id_sources = "+str(source)+";")
+        connection.commit()
     
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
