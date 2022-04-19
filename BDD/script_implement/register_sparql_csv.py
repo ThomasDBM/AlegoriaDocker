@@ -48,6 +48,10 @@ df.rename(columns={'photo': 'url',
 df = df.dropna()
 print(df)
 
+df = df.assign(id_image=0)
+df = df.drop_duplicates(subset=['image'])
+print(df.shape)
+
 # Database connection block
 try:
 
@@ -140,17 +144,21 @@ try:
         if row['image'] not in verif_images and row['image'] not in images_exists:
             if i not in ids:
                 cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), "+str(id_of_sources[0][0])+", null);")
+                df.loc[index, 'id_image'] = i
                 i+=1
                 verif_images.append(row['image'])
             else:
                 while i in ids:
                     i+=1
                 cursor.execute("INSERT INTO images(id_images, t0, t1, image, size_image, id_sources, id_masks) VALUES ("+str(i)+", '2016-06-22 19:10:25-07', '2016-06-22 19:10:25-07', '"+row['image']+"', ST_GeomFromText('POINT(0 0)', 2154), 0, null);")
+                df.loc[index, 'id_image'] = i
                 i+=1
                 verif_images.append(row['image'])
-
+    print(df['id_image'])
     # Commit all requests
-    connection.commit()
+    #connection.commit()
+
+    df.to_csv(csv, sep = ',')
 
     print("Images succefully added to images table.")
 
@@ -186,21 +194,24 @@ try:
     id_all_images = cursor.fetchall()
 
     ids_all_images = []
-    for id in id_images:
-        ids_all_images.append(id[0])
+    for id_image in id_images:
+        ids_all_images.append(id_image[0])
 
-    for id in ids_all_images:
-        cursor.execute("SELECT EXISTS (SELECT 1 FROM georefs WHERE id_images = 4)")
-        exist = cursor.fetchall()
-        if exist[0][0] == False:
-            for index, row in df.iterrows():
+    print(len(id_all_images))
+
+    for index, row in df.iterrows():
+        for id_image in ids_all_images:
+            cursor.execute("SELECT EXISTS (SELECT 1 FROM georefs WHERE id_images = "+str(id_image)+")")
+            exist = cursor.fetchall()
+
+            if exist[0][0] == False:
                 if n not in ids_georefs:
                     if k not in ids_interne and l not in ids_externe and m not in ids_transfo2d:
                         cursor.execute("INSERT INTO interne(id_interne, pp, focal, skew, distorsion) VALUES ("+str(k)+", ST_GeomFromText('POINTZ(0 0 0)', 2154), 50, 0, '{0, 0}');")
                         cursor.execute("INSERT INTO externe(id_externe, point, quaternion, srid) VALUES ("+str(l)+", ST_GeomFromText('POINTZ(0 0 0)', 2154), ST_GeomFromText('POINTZM(0 0 0 0)', 2154), 2154);")
                         cursor.execute("INSERT INTO transfo2d(id_transfo2d, image_matrix) VALUES ("+str(m)+", '{0, 0}');")
                         # Commit all requests
-                        connection.commit()
+                        #connection.commit()
                     else:
                         while k in ids_interne:
                             k+=1
@@ -212,11 +223,11 @@ try:
                         cursor.execute("INSERT INTO externe(id_externe, point, quaternion, srid) VALUES ("+str(l)+", ST_GeomFromText('POINTZ(0 0 0)', 2154), ST_GeomFromText('POINTZM(0 0 0 0)', 2154), 2154);")
                         cursor.execute("INSERT INTO transfo2d(id_transfo2d, image_matrix) VALUES ("+str(m)+", '{0, 0}');")
                         # Commit all requests
-                        connection.commit()
+                        #connection.commit()
                     #print(n, k, l, m)
-                    cursor.execute("INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, footprint, near, far, id_transfo2d, id_interne, id_externe, id_images) VALUES ("+str(n)+", 'ama4', '2016-06-22 19:10:25-07', TRUE, ST_GeomFromText('"+row['footprint']+"', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), "+str(m)+", "+str(k)+", "+str(l)+", 4);")
+                    cursor.execute("INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, footprint, near, far, id_transfo2d, id_interne, id_externe, id_images) VALUES ("+str(n)+", 'ama4', '2016-06-22 19:10:25-07', TRUE, ST_GeomFromText('"+row['footprint']+"', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), "+str(m)+", "+str(k)+", "+str(l)+", "+str(id_image)+");")
                     # Commit all requests
-                    connection.commit()
+                    #connection.commit()
                     n+=1
                     k+=1
                     l+=1
@@ -229,7 +240,7 @@ try:
                         cursor.execute("INSERT INTO externe(id_externe, point, quaternion, srid) VALUES ("+str(l)+", ST_GeomFromText('POINTZ(0 0 0)', 2154), ST_GeomFromText('POINTZM(0 0 0 0)', 2154), 2154);")
                         cursor.execute("INSERT INTO transfo2d(id_transfo2d, image_matrix) VALUES ("+str(m)+", '{0, 0}');")
                         # Commit all requests
-                        connection.commit()
+                        #connection.commit()
                     else:
                         while k in ids_interne:
                             k+=1
@@ -241,16 +252,16 @@ try:
                         cursor.execute("INSERT INTO externe(id_externe, point, quaternion, srid) VALUES ("+str(l)+", ST_GeomFromText('POINTZ(0 0 0)', 2154), ST_GeomFromText('POINTZM(0 0 0 0)', 2154), 2154);")
                         cursor.execute("INSERT INTO transfo2d(id_transfo2d, image_matrix) VALUES ("+str(m)+", '{0, 0}');")
                         # Commit all requests
-                        connection.commit()
-                    cursor.execute("INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, footprint, near, far, id_transfo2d, id_interne, id_externe, id_images) VALUES ("+str(n)+", 'ama4', '2016-06-22 19:10:25-07', TRUE, ST_GeomFromText('"+row['footprint']+"', 2154), "+str(m)+", "+str(k)+", "+str(l)+", 4);")
+                        #connection.commit()
+                    cursor.execute("INSERT INTO georefs(id_georefs, user_georef, date, georef_principal, footprint, near, far, id_transfo2d, id_interne, id_externe, id_images) VALUES ("+str(n)+", 'ama4', '2016-06-22 19:10:25-07', TRUE, ST_GeomFromText('"+row['footprint']+"', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), ST_GeomFromText('POLYGON((50.6373 3.0750,50.6374 3.0750,50.6374 3.0749,50.63 3.07491,50.6373 3.0750))', 2154), "+str(m)+", "+str(k)+", "+str(l)+", "+str(id_image)+");")
                     # Commit all requests
-                    connection.commit()
+                    #connection.commit()
                     n+=1
                     k+=1
                     l+=1
                     m+=1
-        else:
-            print("Un géoréférencement existe déjà pour l'image")
+            else:
+                print("Un géoréférencement existe déjà pour l'image")
     print("Georeferencement succefully added.")
 
 except (Exception, psycopg2.Error) as error :
