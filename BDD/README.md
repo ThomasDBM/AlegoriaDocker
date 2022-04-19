@@ -85,6 +85,11 @@ psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
 
 ## Maintenance ##
 
+### Add csv data
+
+To add data to the database from a csv file, use the following command :
+python3 register_sparql_csv.py postgres postgres alegoria localhost 5432 data/alegoria_export_geosparql_20201210.csv 
+
 ### Remove a data
 
 The remove_data file contains a function integrated to the database allowing to remove a data in any table, except the source table which corresponds to the deletion by batch of data. The function has two arguments : first the table where the data should be deleted, second the index of the data.

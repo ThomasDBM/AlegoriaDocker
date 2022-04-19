@@ -259,9 +259,20 @@ try:
                 l+=1
                 m+=1
         else:
-            print("Un géoréférencement existe déjà pour l'image")
+            #print("Un géoréférencement existe déjà pour l'image")
     print("Georeferencement succefully added.")
-
+    """
+    ## Add right geom to sources
+    cursor.execute("SELECT ST_UNION(georefs.footprint) \
+                    FROM georefs \
+                    INNER JOIN images ON georefs.id_images = images.id_images \
+                    INNER JOIN sources ON sources.id_sources = images.id_sources \
+                    WHERE images.id_sources = 0")
+    geom = cursor.fetchall()
+    cursor.execute("UPDATE sources SET footprint ="+geom[0][0]+";")
+    connection.commit()
+    print(geom)"""
+    
 except (Exception, psycopg2.Error) as error :
 	print('ERROR : '+ str(error))
 
