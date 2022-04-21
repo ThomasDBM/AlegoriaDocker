@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  database:
+    build: ./Docker
+    networks:
+      - AlegoriaNetwork
+    environment:
+    - POSTGRES_PASSWORD=postgres
+
+  client:
+    build: ./Docker
+    volumes:
+      - ./script_implement:/home
+    networks:
+      - AlegoriaNetwork
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: /bin/bash
+
+networks:
+  AlegoriaNetwork:
