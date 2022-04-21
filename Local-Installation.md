@@ -1,4 +1,4 @@
-# Installation application côté client
+# Installation application(depreciated)
 
 ## Pré-requis
 
@@ -94,6 +94,7 @@ pip install pyquaternion
 Puis cloner le dépôt du serveur:
 ```
 git clone https://github.com/mbredif/alegoria.git
+cd alegoria/
 git checkout TSI/tests
 ```
 
