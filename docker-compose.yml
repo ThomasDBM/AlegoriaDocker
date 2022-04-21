@@ -1,7 +1,53 @@
+version: "3.9"
+
 services:
   alegoria:
     build: ./docker
     volumes:
       - ./App:/usr/local/apache2/htdocs/
+    networks:
+      - AlegoriaNetwork
     ports:
       - "8080:80"
+
+  database:
+    build: ./BDD/Docker
+    networks:
+      - AlegoriaNetwork
+      - postgisNetwork
+    volumes:
+         - pgdata:/var/lib/postgresql/data
+    environment:
+    - POSTGRES_PASSWORD=postgres
+
+  dbclient:
+    build: ./BDD/Docker
+    volumes:
+      - ./BDD/script_implement:/home
+    networks:
+      - AlegoriaNetwork
+      - postgisNetwork
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: /bin/bash
+
+  apimicmac:
+    build: ./API_MicMac/MicMac-API
+    networks:
+      - AlegoriaNetwork
+    ports: 
+      - "3000:3000"
+
+  geoserver:
+    image: kartoza/geoserver
+    networks:
+      - AlegoriaNetwork
+    ports: 
+      - "8081:8080"
+
+networks:
+  AlegoriaNetwork:
+  postgisNetwork:
+
+volumes:
+  pgdata:

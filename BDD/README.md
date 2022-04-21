@@ -2,7 +2,7 @@
 
 ## Architecture ##
 
-## Install ##
+## Install locally ##
 
 In the following section we will explain how to install the database. First of all, the PostgreSQL library must be installed with the following command :
 ```
@@ -36,6 +36,23 @@ sudo pg_isready
 
 After the previous steps, we have successfully installed PostgreSQL and its client PgAdmin. However, no database is instantiated and therefore no connection to a server can be established. We will therefore create the database and the server.
 
+## Install with Docker ##
+
+use :
+```
+docker-compose up
+```
+then to continue the setup and install the database, for that in a new terminal run :
+```
+docker exec -it alegoriadocker_dbclient_1 /bin/bash
+```
+you have now acces to a commandline interface that can connect to the postgreSQL database
+and all the file you need are in the `\home` directory.
+
+To setup the database follow the instructions [here](BDD/README.md) in the `Creating the database` section
+
+## Creating the database ##
+
 ```
 sudo -u postgres psql
 postgres=# ALTER USER postgres WITH PASSWORD 'postgres'
@@ -47,6 +64,7 @@ postgres=# \q
 Since we are handling spatial data, we also need to install the postgis and python extensions for our database :
 ```
 sudo apt-get install postgresql-plpython3-12 postgis postgresql-12-postgis-3
+#Skip the line before if you are using the Docker installation
 sudo -u postgres psql
 postgres=# \c alegoria
 alegoria=# CREATE EXTENSION postgis;
@@ -61,6 +79,7 @@ After that, you need to open the PgAdmin client and establish a connection to th
 
 Now that everything is up and running, we need to fill the database. We must ensure that python is installed with the following packages :
 ```
+#Skip this step if you are using the Docker installation
 python3 --version
 sudo apt-get install python3-pip 
 pip install psycopg2-binary
