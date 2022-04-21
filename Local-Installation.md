@@ -1,4 +1,4 @@
-# Installation application côté client
+# Installation application(depreciated)
 
 ## Pré-requis
 
