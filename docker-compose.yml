@@ -21,7 +21,7 @@ services:
   dbclient:
     build: ./BDD/Docker
     volumes:
-      - ./script_implement:/home
+      - ./BDD/script_implement:/home
     networks:
       - AlegoriaNetwork
       - postgisNetwork
