@@ -1,0 +1,26 @@
+DEFINE input:inference 'urn:owl:inference:rules:records'
+PREFIX rico: <https://www.ica.org/standards/RiC/ontology#>
+PREFIX geofla: <http://data.ign.fr/def/geofla#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX geom: <http://data.ign.fr/def/geometrie#>
+PREFIX gsp: <http://www.opengis.net/ont/geosparql#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+select distinct ?photo ?nomFichierImg ?titre ?date ?toponyme ?insee ?wkt 
+where {
+ ?photo a rico:RecordResource.
+ ?photo rico:hasInstantiation/rico:hasOrHadComponent*/rico:hasDerivedInstantiation* ?imageNum.
+ ?imageNum a rico:Instantiation.
+ {?imageNum rico:hasOrHadIdentifier/rico:textualValue ?nomFichierImg.}
+ UNION
+ {?imageNum rico:identifier ?nomFichierImg.}
+ OPTIONAL{?imageNum dc:format ?format.}
+ OPTIONAL{?photo rico:isOrWasIncludedIn*/rico:hasOrHadMainSubject/owl:sameAs*/geom:geometry ?geom. ?geom geom:crs ?crs. ?geom gsp:asWKT ?wkt.}
+Filter (?format IN ('image/jpeg'@en,'image/jp2'@en,'image/tiff'@en))
+Filter regex (str(?crs), 'WGS84')
+ ?photo rico:creationDate ?date.
+ ?photo rico:title ?titre.
+ ?photo rico:hasOrHadMainSubject/rdfs:label ?toponyme.
+ ?photo rico:hasOrHadMainSubject/geofla:codeComm ?insee
+}
