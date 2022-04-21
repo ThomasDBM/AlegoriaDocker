@@ -38,6 +38,16 @@ services:
     ports: 
       - "3000:3000"
 
+  geoserver:
+    image: kartoza/geoserver
+    networks:
+      - AlegoriaNetwork
+    ports: 
+      - "8081:8080"
+
 networks:
   AlegoriaNetwork:
   postgisNetwork:
+
+volumes:
+  pgdata:
