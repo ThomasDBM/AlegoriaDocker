@@ -1,8 +1,8 @@
-name: CI for test the build and functionS
+name: CI for test the build and functions
 on:
   push:
     branches:
-      - Vignaud/verify_scripts
+      - Vignaud/register_csv
   pull_request:
     branches:
       - main
@@ -28,7 +28,7 @@ jobs:
       - name : Install pip
         run : sudo apt-get install python3-pip 
       - name : Install library
-        run: pip install psycopg2-binary
+        run: pip install psycopg2-binary pandas
       - name : Fill database
         run : python3 BDD/script_implement/create_BDD.py postgres postgres alegoria localhost 5432
       - name : Do all tests
@@ -104,3 +104,5 @@ jobs:
         run : psql test -h localhost -d test -f BDD/script_implement/test/test_modify_data.sql
         env:
           PGPASSWORD: test
+
+  

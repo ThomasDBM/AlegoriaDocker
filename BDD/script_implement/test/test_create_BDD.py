@@ -45,7 +45,7 @@ class TestCreateMethods(unittest.TestCase):
                             FROM geometry_columns \
                             WHERE f_table_schema = 'public' \
                             AND f_table_name = 'interne' \
-                            AND f_geometry_column = 'focal'")
+                            AND f_geometry_column = 'pp'")
 
             # Retrieve the result
             type_focal = cursor.fetchall()
@@ -87,7 +87,7 @@ class TestCreateMethods(unittest.TestCase):
         self.assertEqual(type_focal[0][0], 'POINT')
         self.assertEqual(type_focal[0][1], 3)
         # Of footprint in images table
-        self.assertEqual(type_footprint_images[0][0], 'POLYGON')
+        self.assertEqual(type_footprint_images[0][0], 'MULTIPOLYGON')
         self.assertEqual(type_footprint_images[0][1], 2)
         # Of footprint in soures table
         self.assertEqual(type_footprint_sources[0][0], 'MULTIPOLYGON')

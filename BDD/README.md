@@ -38,6 +38,7 @@ After the previous steps, we have successfully installed PostgreSQL and its clie
 
 ```
 sudo -u postgres psql
+postgres=# ALTER USER postgres WITH PASSWORD 'postgres'
 postgres=# CREATE DATABASE alegoria;
 postgres=# GRANT ALL PRIVILEGES ON DATABASE alegoria to postgres;
 postgres=# \q
@@ -64,12 +65,14 @@ python3 --version
 sudo apt-get install python3-pip 
 pip install psycopg2-binary
 pip install pyquaternion
+pip install pandas
 ```
 
 Finally, we can complete our database with the following commands :
 ```
 python3 create_BDD.py postgres postgres alegoria localhost 5432
 ```
+The arguments following the call of python3 are: the name of the file, the name of the user of the database, the password of this one. The last two arguments correspond to the local host and port of the database.
 
 To execute the tests of the database creation script, we use the command (the test libraries are already implemented with python3):
 ```
@@ -81,7 +84,23 @@ To add the data management functions to our database, we will use the following 
 psql postgres -h localhost -d alegoria -f BDD/script_implement/remove_data.sql
 ```
 
+## Find data ##
+
+In order to populate the database, you must first retrieve them. To do this, you must go to [Virtuoso](http://data.alegoria-project.fr/sparql/) of alegoria project.
+
+After that, you need to copy and paste the SPARQL query written in the requete_sparql.txt file, in order to retrieve the data. You also need to specify that you want to retrieve the data in csv format.
+
+![image](images/virtuoso.PNG)
+
 ## Maintenance ##
+
+### Add csv data
+
+First, the database must be created with the different tables. To add data to the database from a csv file, use the following command :
+```
+python3 register_sparql_csv.py postgres postgres alegoria localhost 5432 data/name_of_your_csv.csv
+```
+The arguments are the same type as when you want to create the database. Here the file used is different, and the new argument corresponds to the path where the csv file is located in relation to the python file.
 
 ### Remove a data
 
