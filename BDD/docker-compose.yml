@@ -5,6 +5,8 @@ services:
     build: ./Docker
     networks:
       - AlegoriaNetwork
+    volumes:
+         - pgdata:/var/lib/postgresql/data
     environment:
     - POSTGRES_PASSWORD=postgres
 

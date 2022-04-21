@@ -15,6 +15,8 @@ services:
     networks:
       - AlegoriaNetwork
       - postgisNetwork
+    volumes:
+         - pgdata:/var/lib/postgresql/data
     environment:
     - POSTGRES_PASSWORD=postgres
 

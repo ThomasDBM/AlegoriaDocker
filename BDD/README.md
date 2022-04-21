@@ -2,7 +2,7 @@
 
 ## Architecture ##
 
-## Install ##
+## Install locally ##
 
 In the following section we will explain how to install the database. First of all, the PostgreSQL library must be installed with the following command :
 ```
@@ -35,6 +35,21 @@ sudo pg_isready
 ![image](images/InstallPostGre2.PNG)
 
 After the previous steps, we have successfully installed PostgreSQL and its client PgAdmin. However, no database is instantiated and therefore no connection to a server can be established. We will therefore create the database and the server.
+
+## Install with Docker ##
+
+use :
+```
+docker-compose up
+```
+then to continue the setup and install the database, for that in a new terminal run :
+```
+docker exec -it alegoriadocker_dbclient_1 /bin/bash
+```
+you have now acces to a commandline interface that can connect to the postgreSQL database
+and all the file you need are in the `\home` directory.
+
+To setup the database follow the instructions [here](BDD/README.md) in the `Creating the database` section
 
 ## Creating the database ##
 
